@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+.text_hover_anim {
+    position: relative;
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.text_hover_anim::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #499499;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.text_hover_anim:hover {
+    color: #499499;
+}
+
+.text_hover_anim:hover::after {
+    transform: scaleX(1);
+}
+
+.hover-text-green:hover {
+    color: #407c7c;
+  }
+
+body {
+    font-family: 'Merriweather', 'Georgia', serif; 
+    margin: 0;
+    padding: 0;
+    color: black;
+  }
+  
+  body {
+    font-family: 'Helvetica Neue 5', sans-serif;
+  }
+

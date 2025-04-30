@@ -1,0 +1,26 @@
+.content_render a {
+  color: #15803d;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.content_render a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #15803d;
+  transition: width 0.3s ease;
+}
+
+.content_render a:hover {
+  color: #166534; 
+}
+
+.content_render a:hover::after {
+  width: 100%;
+}
