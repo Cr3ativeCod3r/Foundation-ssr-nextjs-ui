@@ -2,7 +2,7 @@ import { PartnersSection } from "@/Components/Home/PartnersSection";
 import { LatestNewsSection } from "@/Components/Home/LastesNews/LatestNewsSection";
 import { MainNewsSectionTop } from "@/Components/Home/BoardTop/MainNewsSectionTop";
 import { MainArticlesSection } from "@/Components/Home/BoardBottom/MainArticlesSection";
-import { AdBanner } from "@/Components/Home/AdBanner";
+import AdBanner from "@/Components/Home/AdBanner";
 import { AdditionalPostsSection } from "@/Components/Home/News12/AdditionalPostsSection";
 import React from "react";
 import { LuBrain } from "react-icons/lu";
@@ -24,7 +24,14 @@ export default function Home() {
             </div>
             <div className="lg:col-span-8">
               <MainNewsSectionTop />
-              <AdBanner className="h-32" />
+              <div className="mb-6">
+                <AdBanner
+                  bannerId={1}
+                  interval={8000}
+                  width="w-full"
+                  height="20vh"
+                />
+              </div>
               <MainArticlesSection />
             </div>
           </div>

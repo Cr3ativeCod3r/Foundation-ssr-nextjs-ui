@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchRandomNews } from "@/api/news";
 
-// Definiowanie typu dla pojedynczego posta
 type NewsItem = {
   id: number;
   header: string;
@@ -13,11 +12,10 @@ type NewsItem = {
   };
   imageUrl: string;
   slug: string;
-  description: string;
+  description: string | null;
   createdAt: string;
 };
 
-// Komponent karty pojedynczego posta
 const PostCard = ({ post }: { post: NewsItem }) => {
   const formattedDate = new Date(post.createdAt).toLocaleDateString('pl-PL', {
     day: 'numeric',
@@ -25,18 +23,18 @@ const PostCard = ({ post }: { post: NewsItem }) => {
     year: 'numeric'
   });
 
+  const imageUrl = `${process.env.NEXT_PUBLIC_DOMAIN_URL}${post.imageUrl}`;
+
   return (
     <Link href={`/${post.category.slug}/${post.slug}`}>
       <div className="flex flex-col h-full rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white">
         <div className="relative h-48 overflow-hidden">
-            <Image 
-              src={post.imageUrl} 
-              alt={post.header} 
-              layout="fill"
-              objectFit="cover"
-            />
-            />
-          )}
+          <Image
+            src={imageUrl}
+            alt={post.header}
+            layout="fill"
+            objectFit="cover"
+          />
         </div>
         <div className="p-4 flex-1 flex flex-col">
           <h3 className="text-lg font-bold mb-2 line-clamp-2">{post.header}</h3>
@@ -48,7 +46,6 @@ const PostCard = ({ post }: { post: NewsItem }) => {
   );
 };
 
-// Komponent dla postów powiązanych
 const RelatedPosts = ({ currentPostId }: { currentPostId: number }) => {
   const [relatedPosts, setRelatedPosts] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);

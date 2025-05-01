@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
           </ul>
 
           {/* Socials */}
-          <div className="hidden md:flex flex-col items-center mr-4">
+          <div className="flex-col text-center items-center mr-4">
             <span className="text-xs text-gray-600 mb-1">Śledź nas</span>
             <SocialLinks />
           </div>
@@ -129,12 +129,12 @@ const Navbar: React.FC = () => {
                 closeMenu={closeMenu}
               />
             </li>
-            <li className="pt-8">
+            {/* <li className="pt-8">
               <div className="flex flex-col items-center">
                 <span className="mb-4">Śledź nas</span>
                 <SocialLinks isMobile={true} />
               </div>
-            </li>
+            </li> */}
           </ul>
         </div>
       )}

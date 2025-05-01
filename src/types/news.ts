@@ -68,3 +68,10 @@ export interface PostsResponse {
         pagination: PaginationMeta;
     };
 }
+
+// types/banner.ts
+export interface BannerItem {
+    id: number;
+    link: string;
+    imageUrl: string;
+  }

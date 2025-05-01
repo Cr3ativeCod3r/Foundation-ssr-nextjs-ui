@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
                 <nav>
                     <h6 className="footer-title text-gray-800">FCHM</h6>
                     <Link className="text_hover_anim" href='https://www.sluzbazdrowia.com.pl/leki.php'>Znajdź lek</Link>
-                    <Link className="text_hover_anim" href='/map'>Mapa Ośrodków</Link>
+                    <Link className="text_hover_anim" href='/mapa'>Mapa Ośrodków</Link>
                     <Link className="text_hover_anim" href='/aktualnosci'>Aktualności</Link>
                 </nav>
                 <nav>
