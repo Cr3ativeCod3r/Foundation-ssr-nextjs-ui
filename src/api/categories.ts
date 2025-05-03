@@ -1,16 +1,20 @@
 const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+const NEXT_PUBLIC_DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL || "";
+
 import { ApiResponseItem, Category, PostsResponse } from "@/types/news";
 
 export async function fetchCategories(): Promise<Category[]> {
-    const res = await fetch(`${API_URL}/categories`);
+    const res = await fetch(`${API_URL}/categories?populate=*`);
     const data = await res.json();
 
     return data.data.map((category: Category) => ({
         name: category.name,
         slug: category.slug,
+        imageUrl: category?.cover_image?.url
+            ? NEXT_PUBLIC_DOMAIN_URL + category.cover_image.url
+            : "",
     }));
 }
-
 
 export async function fetchCategoryPosts(
     slug: string,

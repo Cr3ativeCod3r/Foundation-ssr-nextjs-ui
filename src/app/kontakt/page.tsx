@@ -20,7 +20,7 @@ const Contact: React.FC = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_EXPRESS_URL}.env.VITE_BackendUrl}/api/mailer/send-email`, formData, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_EXPRESS_URL}/api/mailer/send-email`, formData, {
                 headers: { 'Content-Type': 'application/json' },
             });
 

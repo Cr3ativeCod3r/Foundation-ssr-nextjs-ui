@@ -1,27 +1,37 @@
 import { fetchCategoryPosts, fetchCategoryBySlug } from '@/api/categories';
 import CategoryPosts from '@/Components/Category/CategoryPosts';
 import { notFound } from 'next/navigation';
-import { FaBrain } from 'react-icons/fa'; // Import ikony mózgu
+import { FaBrain } from 'react-icons/fa';
+
 export const dynamic = 'force-dynamic';
 
 interface CategoryPageProps {
-    params: {
+    params: Promise<{ // Zwróć uwagę na Promise
         kategoria: string;
-    };
-    searchParams: {
+    }>;
+    searchParams?: Promise<{ // Zwróć uwagę na Promise
         page?: string;
-    };
+    }>;
 }
 
+// Komponent strony musi być async, co już masz
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-    const { kategoria } = params;
-    const page = parseInt(searchParams.page || '1', 10);
+    // Najpierw await na obiekcie params
+    const { kategoria } = await params;
+
+    // Najpierw await na obiekcie searchParams (jeśli istnieje)
+    const resolvedSearchParams = await searchParams;
+    const pageParam = resolvedSearchParams?.page;
+
+    // Pozostała logika pozostaje taka sama
+    const page = Number.isNaN(Number(pageParam)) ? 1 : parseInt(pageParam || '1', 10);
 
     try {
         const category = await fetchCategoryBySlug(kategoria);
         if (!category) {
             return notFound();
         }
+
         const postsResponse = await fetchCategoryPosts(kategoria, page, 6);
 
         return (
@@ -30,11 +40,11 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                     <FaBrain className="text-red-400 text-2xl" />
                     <h1 className="text-2xl text-gray-700 font-semibold">{category.name}</h1>
                 </div>
-                <hr className="border-gray-300 mb-6" /> 
+                <hr className="border-gray-300 mb-6" />
                 <CategoryPosts
                     initialPosts={postsResponse.data}
                     initialPagination={postsResponse.meta.pagination}
-                    categorySlug={kategoria}
+                    categorySlug={kategoria} // Użyj zdestrukturyzowanej wartości 'kategoria'
                 />
             </div>
         );
@@ -48,3 +58,4 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         );
     }
 }
+

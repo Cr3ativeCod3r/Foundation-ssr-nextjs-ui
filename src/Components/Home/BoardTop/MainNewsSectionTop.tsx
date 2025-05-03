@@ -30,7 +30,7 @@ export const MainNewsSectionTop: React.FC = () => {
                                 className="w-full h-auto mb-2 rounded-lg object-cover"
                             />
                         ) : (
-                            <div className="w-full h-48 bg-gray-200 mb-2 rounded-lg" />
+                           null
                         )}
                         <h4 className="font-bold text-gray-600 text-md mb-1 hover-text-green ">{news.header}</h4>
                     </div>

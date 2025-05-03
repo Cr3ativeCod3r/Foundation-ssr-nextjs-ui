@@ -5,7 +5,7 @@ import Link from "next/link";
 const Footer: React.FC = () => {
     return (
         <>
-            <div className='w-full bg-green-400 h-8 text-green-50 justify-center items-center flex'>Strona należy do Fundacji Chorób Mózgu</div>
+            <div className='w-full bg-[#99d1c8] h-8 text-green-50 justify-center items-center flex'>Strona należy do Fundacji Chorób Mózgu</div>
             <footer className="footer sm:footer-horizontal text-gray-500 vtext-base-content p-10 bg-white">
                 <aside>
                     <Image src={logo} alt="Fundacja Chorób Mózgu Logo" height={100} className='h-24 lg:ml-6 sm: -ml-6' />

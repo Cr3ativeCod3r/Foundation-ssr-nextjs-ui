@@ -72,8 +72,8 @@ export async function fetchRandomNews(
     `populate[category][populate]=cover_image&` +
     `populate=image&` +
     `filters[id][$ne]=${excludeId}&` +
-    `pagination[start]=0&` + // pobieramy od początku
-    `pagination[limit]=50` // większy limit, żeby mieć z czego losować
+    `pagination[start]=0&` + 
+    `pagination[limit]=50`
   );
 
   const data = await res.json();

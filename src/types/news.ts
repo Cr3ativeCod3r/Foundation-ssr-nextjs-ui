@@ -60,6 +60,15 @@ export interface PaginationMeta {
 export interface Category {
     name: string;
     slug: string;
+    imageUrl?: string;
+    cover_image?: {
+        url: string;
+        formats: {
+            small: { url: string };
+            medium: { url: string };
+            large: { url: string };
+        };
+    };
 }
 
 export interface PostsResponse {

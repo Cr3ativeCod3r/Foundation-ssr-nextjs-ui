@@ -32,8 +32,8 @@ const PostCard = ({ post }: { post: NewsItem }) => {
           <Image
             src={imageUrl}
             alt={post.header}
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
           />
         </div>
         <div className="p-4 flex-1 flex flex-col">

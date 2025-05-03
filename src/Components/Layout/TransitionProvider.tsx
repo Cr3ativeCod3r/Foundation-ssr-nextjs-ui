@@ -16,8 +16,8 @@ export default function PageTransition({ children }: PageTransitionProps) {
         key={pathname}
         initial={{
           opacity: 0,
-          y: 15,
-          filter: "blur(5px)"
+          y: 6,
+          filter: "blur(3px)"
         }}
         animate={{
           opacity: 1,
@@ -26,12 +26,12 @@ export default function PageTransition({ children }: PageTransitionProps) {
         }}
         exit={{
           opacity: 0,
-          y: -10,
-          filter: "blur(3px)"
+          y: -4,
+          filter: "blur(2px)"
         }}
         transition={{
-          duration: 1,
-          ease: [0.22, 1, 0.36, 1]
+          duration: 0.7,
+          ease: "easeInOut"
         }}
       >
         {children}
@@ -39,10 +39,10 @@ export default function PageTransition({ children }: PageTransitionProps) {
       <motion.div
         key={`flash-${pathname}`}
         className="fixed inset-0 bg-blue-50 pointer-events-none z-40"
-        initial={{ opacity: 0.3 }}
+        initial={{ opacity: 0.15 }}
         animate={{
           opacity: 0,
-          transition: { duration: 0.5 }
+          transition: { duration: 0.6 }
         }}
         exit={{ opacity: 0 }}
       />

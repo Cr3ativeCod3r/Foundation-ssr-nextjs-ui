@@ -55,3 +55,56 @@
 .prose-content ol li::marker {
   color: #6b7280;
 }
+
+/* Styl blogowy dla tekstów – z przedrostkiem content_render */
+
+.content_render h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin: 2rem 0 1rem 0;
+  font-weight: 700;
+}
+
+.content_render h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin: 2rem 0 1rem 0;
+  font-weight: 600;
+}
+
+.content_render h3 {
+  font-size: 1.75rem;
+  line-height: 1.4;
+  margin: 1.5rem 0 1rem 0;
+  font-weight: 600;
+}
+
+.content_render h4 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin: 1.5rem 0 0.75rem 0;
+  font-weight: 600;
+}
+
+.content_render h5 {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.content_render h6 {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.content_render p {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  margin: 1rem 0;
+  font-weight: 400;
+
+}
