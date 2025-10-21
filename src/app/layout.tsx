@@ -30,6 +30,7 @@ export default function RootLayout({
     <html lang="pl" className="bg-white">
       <head>
         <link rel="icon" href="/img/ico.png" type="image/png" />
+	<meta name="google-site-verification" content="QhjcbWPu9g-SE8G4DpXM-vSWGv-a7CM5rcf5S86VL-M" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

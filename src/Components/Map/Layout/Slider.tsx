@@ -27,13 +27,12 @@ const Slider: React.FC<SliderProps> = ({ isSliderOpen, marker }) => {
   return (
     <>
       <div
-        className={`slider ${isSliderOpen ? 'slider-open' : 'slider-closed'} bg-gradient-to-b -pt-[120px] from-slate-600 to-slate-800 overflow-x-auto lg:pt-[120px] sm: pt-[50px] text-white`}
+        className={`slider ${isSliderOpen ? 'slider-open' : 'slider-closed'} bg-gradient-to-b -pt-[120px] from-slate-600 to-slate-800 overflow-x-auto  text-white `}
       >
         <div>
           {marker ? (
-            <div className="bg-slate-600 p-4 rounded-md relative">
-              <GiPositionMarker className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-3xl text-gray-300" />
-              <h3 className="lg:text-lg sm: text-md font-bold lg:mb-12 sm: mb-4 mt-4 text-left">
+            <div className=" p-4 rounded-md relative ">
+              <h3 className="lg:text-lg sm: text-md font-bold lg:mb-12 sm: mb-4 text-left sm: mt-0 lg:mt-[100px]">
                 {marker.department}
               </h3>
               <p className=" flex items-center text-sm mb-2 lg:text-xl sm:text-md">

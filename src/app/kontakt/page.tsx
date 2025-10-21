@@ -41,7 +41,7 @@ const Contact: React.FC = () => {
     return (
         <div className='my-[5vh]'>
             <div className="lg:w-[50vw] slide-in mx-auto sm:w-full  flex justify-center">
-                <div className="bg-white lg:py-8 lg:px-8 sm: px-2 sm: py-8 rounded-lg lg:shadow-lg sm: shadow-sm w-full">
+                <div className="bg-white lg:py-8 lg:px-8 sm: px-2 sm: py-8 rounded-lg w-full">
                     <ToastContainer />
 
                     <h2 className="text-2xl font-semibold justify-center text-gray-800 mb-6 flex items-center text-center">

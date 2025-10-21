@@ -77,7 +77,7 @@ const MapCard: React.FC = () => {
 
     return (
         <>
-            <div className='overflow-hidden h-[100vh] bg-white mt-[-100px]'>
+            <div className='overflow-hidden h-[100vh] bg-white mt-[-120px] z-999'>
                 <Slider isSliderOpen={isSliderOpen} toggleSlider={toggleSlider} marker={selectedMarker} />
 
                 <div className="h-[87vh] mt-[100px] w-full relative show-in">

@@ -39,9 +39,9 @@ export async function fetchCategoryPosts(
             slug: item.category.slug,
         },
         imageUrl:
-            (Array.isArray(item.image) && item.image.length > 0 && item.image[0]?.formats?.medium?.url) ||
-            item.category?.cover_image?.url ||
-            "",
+        item.category?.cover_image?.url ||
+        (Array.isArray(item.image) && item.image.length > 0 && item.image[0]?.formats?.medium?.url) ||
+        "",
         slug: item.slug,
         createdAt: item.createdAt,
     }));

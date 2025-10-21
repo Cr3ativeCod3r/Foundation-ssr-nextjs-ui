@@ -11,7 +11,7 @@ export const ArticleCard: React.FC<{ news: NewsItem }> = ({ news }) => {
 
     return (
         <Link href={linkHref} passHref>
-            <div className="mb-6 cursor-pointer hover:opacity-90 hover:bg-gray-50  duration-400 ease-in-out hover:translate-y-1 transition-transform p-1">
+            <div className="mb-6 cursor-pointer hover:opacity-90 hover:bg-gray-50 duration-400 ease-in-out hover:translate-y-1 transition-transform p-1">
                 <div className="relative aspect-[16/9] mb-2">
                     {imageUrl ? (
                         <Image
@@ -28,10 +28,17 @@ export const ArticleCard: React.FC<{ news: NewsItem }> = ({ news }) => {
                 
                 <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 w-full rounded-full mb-2"></span>
                 <h3 className="text-lg font-bold text-gray-700 mb-2 line-clamp-2">{news.header}</h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">{news.description}</p>
-                    <div className="text-xs text-gray-500 mt-auto">
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{news.description}</p>
+
+                <div className="flex justify-between items-center mt-auto">
+                    <div className="text-xs text-gray-500">
                         {new Date(news.createdAt).toLocaleDateString()}
                     </div>
+                    <span className="page_text text-sm font-medium">
+                        Czytaj więcej
+                    </span>
+                </div>
+                
             </div>
         </Link>
     );

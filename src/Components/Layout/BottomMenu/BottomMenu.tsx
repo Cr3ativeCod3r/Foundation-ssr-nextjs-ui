@@ -17,7 +17,7 @@ export default function BottomMenu() {
   return (
     <div className=" bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 lg:hidden sm: fixed">
       <div className="max-w-screen-xl mx-auto">
-        <nav className="flex justify-around items-center py-2">
+        <nav className="flex justify-around items-center py-1">
           {menuItems.map((item) => (
         <Link
         key={item.id}

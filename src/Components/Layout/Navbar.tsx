@@ -54,7 +54,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? "h-[100px]" : "h-[120px]"} bg-white shadow-md backdrop-blur-md`}>
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? "h-[80px]" : "h-[100px]"} bg-white shadow-md backdrop-blur-md`}>
         <div className="container mx-auto px-4 flex justify-between items-center h-full">
 
           <div className="cursor-pointer">
