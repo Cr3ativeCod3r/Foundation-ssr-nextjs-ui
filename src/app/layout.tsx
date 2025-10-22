@@ -17,8 +17,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Choroby Mózgu",
-  description: "Blog medyczny o chorobach mózgu",
+  title: {
+    default: "Choroby Mózgu - Rzetelna wiedza o neurologii",
+    template: "%s | Choroby Mózgu",
+  },
+  description:
+    "Blog medyczny o chorobach mózgu — rzetelne informacje o neurologii, zdrowiu psychicznym i nowoczesnych metodach leczenia.",
+  keywords: [
+    "choroby mózgu",
+    "neurologia",
+    "zdrowie psychiczne",
+    "mózg",
+    "leczenie",
+    "artykuły medyczne",
+  ],
+  authors: [{ name: "Zespół ChorobyMózgu.pl" }],
+  metadataBase: new URL("https://chorobymozgu.pl"),
+  openGraph: {
+    title: "Choroby Mózgu - Wiedza o neurologii i zdrowiu psychicznym",
+    description:
+      "Dowiedz się więcej o chorobach mózgu, ich przyczynach, leczeniu i profilaktyce. Artykuły pisane przez specjalistów.",
+    url: "https://chorobymozgu.pl",
+    siteName: "Choroby Mózgu",
+    locale: "pl_PL",
+    type: "website",
+    images: [
+      {
+        url: "/img/avatar.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Choroby Mózgu - Blog medyczny o neurologii",
+      },
+    ],
+  }
 };
 
 export default function RootLayout({
@@ -28,19 +59,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl" className="bg-white">
-      <head>
-        <link rel="icon" href="/img/ico.png" type="image/png" />
-	<meta name="google-site-verification" content="QhjcbWPu9g-SE8G4DpXM-vSWGv-a7CM5rcf5S86VL-M" />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        <div className="pt-[120px]">
-          <TransitionProvider>
-            {children}
-          </TransitionProvider>
-        </div>
+        <main className="pt-[120px]">
+          <TransitionProvider>{children}</TransitionProvider>
+        </main>
         <Footer />
         <BottomMenu />
       </body>
