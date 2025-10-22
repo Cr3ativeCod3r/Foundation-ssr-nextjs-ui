@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import logo from '../../../public/img/logo.png';
+import { fetchCategories } from "@/api/categories";
+import ScrollProgressBar from "@/Components/Layout/ScrollProgress";
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { fetchCategories } from "@/api/categories";
+import React, { useEffect, useState } from 'react';
+import logo from '../../../public/img/logo.png';
 import CategoriesDropdown from './Navbar/CategoriesDropdown';
-import SocialLinks from './Navbar/SocialLinks';
 import FundacjaDropdown from './Navbar/FundacjaDropdown';
-import ScrollProgressBar from "@/Components/Layout/ScrollProgress";
+import SocialLinks from './Navbar/SocialLinks';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -84,9 +83,13 @@ const Navbar: React.FC = () => {
             <li>
               <Link href="/mapa" className="hover:text-blue-500 transition ml-4 text_hover_anim">MAPA OŚRODKÓW</Link>
             </li>
+             <li>
+              <Link href="/search" className="hover:text-blue-500 transition ml-4 text_hover_anim">SZUKAJ ARTYKUŁÓW
+              </Link>
+            </li>
           </ul>
 
-          {/* Socials */}
+ 
           <div className="flex-col text-center items-center mr-4">
             <span className="text-xs text-gray-600 mb-1">Śledź nas</span>
             <SocialLinks />

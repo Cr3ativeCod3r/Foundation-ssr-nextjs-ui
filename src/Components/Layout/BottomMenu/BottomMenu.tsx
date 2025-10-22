@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { AiOutlineHome, AiOutlineAppstore, AiOutlineTeam, AiOutlineEnvironment } from 'react-icons/ai';
 import Link from 'next/link';
+import { CiSearch } from "react-icons/ci";
 
 export default function BottomMenu() {
   const [activeTab, setActiveTab] = useState('home');
@@ -11,7 +12,8 @@ export default function BottomMenu() {
     { id: 'home', name: 'Główna', icon: <AiOutlineHome size={24} />, href: '/' },
     { id: 'categories', name: 'Kategorie', icon: <AiOutlineAppstore size={24} />, href: '/kategorie' },
     { id: 'foundation', name: 'Fundacja', icon: <AiOutlineTeam size={24} />, href: '/fundacja' },
-    { id: 'map', name: 'Ośrodki', icon: <AiOutlineEnvironment size={24} />, href: '/mapa' }
+    { id: 'map', name: 'Ośrodki', icon: <AiOutlineEnvironment size={24} />, href: '/mapa' },
+    { id: 'szukaj', name: 'Szukaj', icon: <CiSearch size={24} />, href: '/search' }
   ];
 
   return (

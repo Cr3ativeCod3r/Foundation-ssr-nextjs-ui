@@ -7,6 +7,7 @@ import { AdditionalPostsSection } from "@/Components/Home/News12/AdditionalPosts
 import React from "react";
 import { LuBrain } from "react-icons/lu";
 import { Metadata } from "next";
+import WhyHowWhat from "@/Components/WhyHowWhat";
 
 export const metadata: Metadata = {
   title: "Choroby Mózgu - Rzetelna wiedza o neurologii i zdrowiu psychicznym",
@@ -45,13 +46,14 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <div className="lg:w-[85vw] sm:w-[95vw] mx-auto mt-8">
+      {/* <div className="lg:w-[85vw] sm: w-[95vw] mx-auto mt-8">
         <p className="flex text-gray-500 items-center">
           <LuBrain className="mr-1 text-pink-400" />
-          Rzetelna wiedza na temat chorób mózgu
+          Wierzymy że każdy zasługuje na godne życie
         </p>
         <hr className="border-gray-300 mb-4" />
-      </div>
+      </div> */}
+      <WhyHowWhat/>
 
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-6">
