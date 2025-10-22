@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "projekty",
     "statut",
     "kontakt",
+    "search"
   ].map((slug) => ({
     url: `${baseUrl}/${slug}`,
     lastModified: new Date(),
