@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
 
 export async function fetchLatestNews(start: number = 0, limit: number = 5): Promise<NewsItem[]> {
   const res = await fetch(
-    `${API_URL}/posts?populate[category][populate]=cover_image&[populate]=image&sort=createdAt:desc&pagination[start]=${start}&pagination[limit]=${limit}`
+    `${API_URL}/posts?populate[category][populate]=cover_image&populate=image&populate[tags][populate]=*&sort=createdAt:desc&pagination[start]=${start}&pagination[limit]=${limit}`
   );
   const data = await res.json();
 
@@ -21,6 +21,12 @@ export async function fetchLatestNews(start: number = 0, limit: number = 5): Pro
     slug: item.slug,
     description: item.description,
     createdAt: item.createdAt,
+    tags: Array.isArray(item.tags)
+      ? item.tags.flatMap((tagGroup: { Tag: { name: string }[] }) =>
+        Array.isArray(tagGroup.Tag) ? tagGroup.Tag.map(tag => tag.name) : []
+      )
+      : [],
+
   }));
 }
 
@@ -32,7 +38,7 @@ export async function fetchPostBySlug(slug: string): Promise<NewsItem & {
   };
 }> {
   const res = await fetch(
-    `${API_URL}/posts?filters[slug][$eq]=${slug}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=*`
+    `${API_URL}/posts?filters[slug][$eq]=${slug}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=`
   );
 
   const data = await res.json();
@@ -72,7 +78,9 @@ export async function fetchRandomNews(
     `populate[category][populate]=cover_image&` +
     `populate=image&` +
     `filters[id][$ne]=${excludeId}&` +
-    `pagination[start]=0&` + 
+    `populate[tags][populate]=*&` +
+    `sort=createdAt:desc&`+
+    `pagination[start]=0&` +
     `pagination[limit]=50`
   );
 
@@ -94,5 +102,10 @@ export async function fetchRandomNews(
     slug: item.slug,
     description: item.description,
     createdAt: item.createdAt,
+  tags: Array.isArray(item.tags)
+      ? item.tags.flatMap((tagGroup: { Tag: { name: string }[] }) =>
+        Array.isArray(tagGroup.Tag) ? tagGroup.Tag.map(tag => tag.name) : []
+      )
+      : [],
   }));
 }

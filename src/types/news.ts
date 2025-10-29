@@ -16,6 +16,15 @@ export interface NewsItem {
     gallery: {
         url: string;
     }[]; 
+ tags: {
+        Tag: {
+            name: string;
+        }[];
+    }[];
+    author: {
+        name: string;
+        imageUrl: string;
+    };
 }
 export type ApiResponseItem = {
     id: number;
@@ -47,6 +56,11 @@ export type ApiResponseItem = {
             url: string;
         }
     };
+ tags: {
+        Tag: {
+            name: string;
+        }[];
+    }[];
 };
 
 export interface PaginationMeta {

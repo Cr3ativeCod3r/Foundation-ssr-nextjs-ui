@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@caisy/rich-text-react-renderer": "^1.0.1",
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.4.0",
     "@strapi/blocks-react-renderer": "^1.0.2",
+    "@types/three": "^0.180.0",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.9.2",
@@ -22,7 +25,9 @@
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-select": "^5.10.1",
-    "react-toastify": "^11.0.5"
+    "react-three": "^0.9.7",
+    "react-toastify": "^11.0.5",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

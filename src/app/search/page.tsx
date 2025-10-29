@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { fetchPostsByDescription } from '@/api/fetchPostsByDescription';
 import type { NewsItem } from '@/types/news';
+import TagsList from '@/Components/tagsTable';
 
 export default function SearchPosts() {
   const [query, setQuery] = useState('');
   const [posts, setPosts] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [searchBy, setSearchBy] = useState<'header' | 'content'>('content');
+  const [searchBy, setSearchBy] = useState<'header' | 'content' | 'tags'>('content');
   const router = useRouter();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -36,47 +37,26 @@ export default function SearchPosts() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 min-h-[80vh]">
-      <div className="mb-12 text-center">
+      <div className=" text-center">
         <h1 className="text-4xl font-bold text-gray-900 mb-3">Wyszukiwarka postów</h1>
         <p className="text-gray-600">Znajdź interesujące Cię treści w naszej bazie artykułów</p>
       </div>
 
       <form onSubmit={handleSearch} className="mb-10">
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-          <div className="mb-5 flex gap-6 justify-center">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                value="header"
-                checked={searchBy === 'header'}
-                onChange={(e) => setSearchBy(e.target.value as 'header' | 'content')}
-                className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="text-gray-700 font-medium group-hover:text-blue-600 transition-colors">
-                Szukaj w nagłówkach
-              </span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input
-                type="radio"
-                value="content"
-                checked={searchBy === 'content'}
-                onChange={(e) => setSearchBy(e.target.value as 'header' | 'content')}
-                className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="text-gray-700 font-medium group-hover:text-blue-600 transition-colors">
-                Szukaj w zawartości
-              </span>
-            </label>
-          </div>
-          
-          <div className="flex gap-3">
+          <div className="flex gap-3 mb-5">
             <div className="flex-1 relative">
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder={searchBy === 'header' ? 'Wpisz słowo kluczowe z nagłówka...' : 'Wpisz czego szukasz...'}
+                placeholder={
+                  searchBy === 'header'
+                    ? 'Wpisz słowo kluczowe z nagłówka...'
+                    : searchBy === 'tags'
+                      ? 'Wpisz tag...'
+                      : 'Wpisz czego szukasz...'
+                }
                 className="w-full px-5 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
               />
             </div>
@@ -97,6 +77,68 @@ export default function SearchPosts() {
                 'Szukaj'
               )}
             </button>
+          </div>
+
+          <div className="flex gap-4 flex-wrap">
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <div className="relative">
+                <input
+                  type="radio"
+                  value="header"
+                  checked={searchBy === 'header'}
+                  onChange={(e) => setSearchBy(e.target.value as 'header' | 'content' | 'tags')}
+                  className="peer sr-only"
+                />
+                <div className="w-5 h-5 border-2 border-gray-300 rounded-md peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all">
+                  <svg className="w-full h-full text-white opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <span className="text-gray-700 text-sm font-medium group-hover:text-blue-600 transition-colors">
+                Szukaj w nagłówkach
+              </span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <div className="relative">
+                <input
+                  type="radio"
+                  value="content"
+                  checked={searchBy === 'content'}
+                  onChange={(e) => setSearchBy(e.target.value as 'header' | 'content' | 'tags')}
+                  className="peer sr-only"
+                />
+                <div className="w-5 h-5 border-2 border-gray-300 rounded-md peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all">
+                  <svg className="w-full h-full text-white opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <span className="text-gray-700 text-sm font-medium group-hover:text-blue-600 transition-colors">
+                Szukaj w zawartości
+              </span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer group">
+              <div className="relative">
+                <input
+                  type="radio"
+                  value="tags"
+                  checked={searchBy === 'tags'}
+                  onChange={(e) => setSearchBy(e.target.value as 'header' | 'content' | 'tags')}
+                  className="peer sr-only"
+                />
+                <div className="w-5 h-5 border-2 border-gray-300 rounded-md peer-checked:bg-blue-600 peer-checked:border-blue-600 transition-all">
+                  <svg className="w-full h-full text-white opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <span className="text-gray-700 text-sm font-medium group-hover:text-blue-600 transition-colors">
+                Szukaj po tagach
+              </span>
+            </label>
           </div>
         </div>
       </form>
@@ -123,12 +165,14 @@ export default function SearchPosts() {
                   alt={post.header}
                   fill
                   className="object-cover transition-transform duration-300 hover:scale-105"
-                  unoptimized 
+                  unoptimized
                   priority
                 />
               </div>
             )}
             <div className="p-5">
+           
+
               <div className="flex items-center gap-2 mb-3">
                 <span className="inline-block px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 text-xs font-semibold rounded-full">
                   {post.category.name}
@@ -142,6 +186,7 @@ export default function SearchPosts() {
                   })}
                 </time>
               </div>
+                 <TagsList tags={post.tags} />
               <h3 className="text-xl font-bold mb-2 text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors">
                 {post.header}
               </h3>

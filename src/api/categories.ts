@@ -22,7 +22,7 @@ export async function fetchCategoryPosts(
     pageSize: number = 12
 ): Promise<PostsResponse> {
     const res = await fetch(
-        `${API_URL}/posts?filters[category][slug][$eq]=${slug}&populate[category][populate]=*&populate=image&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `${API_URL}/posts?filters[category][slug][$eq]=${slug}&populate[category][populate]=*&populate[tags][populate]=*&populate=image&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     if (!res.ok) {
@@ -44,6 +44,11 @@ export async function fetchCategoryPosts(
         "",
         slug: item.slug,
         createdAt: item.createdAt,
+       tags: Array.isArray(item.tags)
+      ? item.tags.flatMap((tagGroup: { Tag: { name: string }[] }) =>
+        Array.isArray(tagGroup.Tag) ? tagGroup.Tag.map(tag => tag.name) : []
+      )
+      : [],
     }));
 
     return {

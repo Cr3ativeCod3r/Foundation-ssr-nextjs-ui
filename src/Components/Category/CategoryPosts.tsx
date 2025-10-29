@@ -7,6 +7,7 @@ import PostCard from './PostCard';
 import Pagination from './Pagination';
 import { NewsItem, PaginationMeta } from "@/types/news";
 
+
 interface CategoryPostsProps {
   initialPosts: NewsItem[];
   initialPagination: PaginationMeta;

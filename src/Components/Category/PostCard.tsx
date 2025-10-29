@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NewsItem } from "@/types/news";
+import TagsList from "@/Components/tagsTable";
 
 function PostCard({ post }: { post: NewsItem }) {
     const imageUrl = post.imageUrl
@@ -26,6 +27,7 @@ function PostCard({ post }: { post: NewsItem }) {
                 </div>
                 
                 <div className="p-4 flex-grow flex flex-col">
+                              <TagsList tags={post.tags} />
                     <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2"></span>
                     <h3 className="text-lg font-semibold mb-2 line-clamp-2">{post.header}</h3>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.description}</p>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { fetchRandomNews } from "@/api/news";
+import TagsList from "@/Components/tagsTable";
 
 type NewsItem = {
   id: number;
@@ -37,6 +38,7 @@ const PostCard = ({ post }: { post: NewsItem }) => {
           />
         </div>
         <div className="p-4 flex-1 flex flex-col">
+          <TagsList tags={post.tags} />
           <h3 className="text-lg font-bold mb-2 line-clamp-2">{post.header}</h3>
           <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.description}</p>
           <div className="mt-auto text-xs text-gray-500">{formattedDate}</div>
