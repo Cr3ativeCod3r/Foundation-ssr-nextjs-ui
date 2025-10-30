@@ -81,10 +81,14 @@ const Navbar: React.FC = () => {
               />
             </li>
             <li>
-              <Link href="/mapa" className="hover:text-blue-500 transition ml-4 text_hover_anim">MAPA OŚRODKÓW</Link>
+              <Link href="/mapa" className="hover:text-blue-500 transition ml-2 text_hover_anim">MAPA OŚRODKÓW</Link>
             </li>
              <li>
-              <Link href="/search" className="hover:text-blue-500 transition ml-4 text_hover_anim">SZUKAJ ARTYKUŁÓW
+              <Link href="/search" className="hover:text-blue-500 transition ml-2 text_hover_anim">SZUKAJ ARTYKUŁÓW
+              </Link>
+            </li>
+              <li>
+              <Link href="/brain" className="hover:text-blue-500 transition ml-2 text_hover_anim">MÓZG
               </Link>
             </li>
           </ul>

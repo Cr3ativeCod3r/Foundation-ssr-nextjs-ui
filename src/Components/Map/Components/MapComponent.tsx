@@ -27,18 +27,14 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     useEffect(() => {
         if (mapRef.current) {
-            const mapInstance = L.map(mapRef.current).setView([52.32552392507825, 18.960972245741033], 6);
+           const mapInstance = L.map(mapRef.current, { zoomControl: false })
+  .setView([52.32552392507825, 18.960972245741033], 6);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
             }).addTo(mapInstance);
 
-            // @ts-expect-error leaflet-control-geocoder typing issue
-            L.Control.geocoder().addTo(mapInstance);
-            const geocoderElement = document.querySelector('.leaflet-control-geocoder');
-            if (geocoderElement) {
-                geocoderElement.classList.add('custom-geocoder');
-            }
+        
 
             mapInstance.on('drag', () => setSliderOpen(false));
             mapInstanceRef.current = mapInstance;

@@ -80,33 +80,38 @@ const MapCard: React.FC = () => {
             <div className='overflow-hidden h-[100vh] bg-white mt-[-120px] z-999'>
                 <Slider isSliderOpen={isSliderOpen} toggleSlider={toggleSlider} marker={selectedMarker} />
 
-                <div className="h-[87vh] mt-[100px] w-full relative show-in">
-                    <div className="flex justify-center gap-4 absolute z-10 top-2 w-[90vw]">
-                        <div className="flex items-center bg-white p-2 lg:ml-44 sm: ml-auto rounded shadow-md">
-                            <MdManageSearch className="text-2xl text-gray-500 mr-2" />
-                            <Select
-                                options={customLayerNames}
-                                onChange={handleCategoryChange}
-                                onFocus={() => setSliderOpen(false)}
-                                placeholder="Wybierz kategorię..."
-                                className="lg:w-[280px] sm: w-[220px] text-slate-800"
-                                value={customLayerNames.find(layer => layer.value === selectedCategory)}
-                            />
-                        </div>
-                        <div className="lg:flex sm: hidden items-center bg-white p-2 rounded shadow-md">
-                            <MdManageSearch className="text-2xl text-gray-500 mr-2" />
-                            <Select
-                                options={memoizedMarkers.map(marker => ({
-                                    value: marker._id,
-                                    label: marker.department,
-                                }))}
-                                onFocus={() => setSliderOpen(false)}
-                                onChange={handlePointSelection}
-                                placeholder="Szukaj punktu..."
-                                className="lg:w-[280px] sm: w-[60vw] text-slate-800"
-                            />
-                        </div>
-                    </div>
+                <div className="h-[87vh] mt-[100px] w-full relative show-in flex lg:flex-row sm: flex-col">
+      <div className="absolute z-10 top-2 w-full flex justify-center">
+  <div className="flex flex-col lg:flex-row items-center justify-center gap-4 w-[90vw] max-w-[600px] mt-12">
+    {/* Select kategorii */}
+    <div className="flex items-center bg-white p-2 rounded shadow-md w-full lg:w-[280px]">
+      <MdManageSearch className="text-2xl text-gray-500 mr-2" />
+      <Select
+        options={customLayerNames}
+        onChange={handleCategoryChange}
+        onFocus={() => setSliderOpen(false)}
+        placeholder="Wybierz kategorię..."
+        className="w-full text-slate-800"
+        value={customLayerNames.find(layer => layer.value === selectedCategory)}
+      />
+    </div>
+
+    {/* Select punktów */}
+    <div className="flex items-center bg-white p-2 rounded shadow-md w-full lg:w-[280px]">
+      <MdManageSearch className="text-2xl text-gray-500 mr-2" />
+      <Select
+        options={memoizedMarkers.map(marker => ({
+          value: marker._id,
+          label: marker.department,
+        }))}
+        onFocus={() => setSliderOpen(false)}
+        onChange={handlePointSelection}
+        placeholder="Szukaj punktu..."
+        className="w-full text-slate-800"
+      />
+    </div>
+  </div>
+</div>
                     <MapComponent 
                         setMarkers={setMarkers}
                         setSelectedMarker={setSelectedMarker}

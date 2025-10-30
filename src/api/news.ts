@@ -38,7 +38,7 @@ export async function fetchPostBySlug(slug: string): Promise<NewsItem & {
   };
 }> {
   const res = await fetch(
-    `${API_URL}/posts?filters[slug][$eq]=${slug}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=`
+    `${API_URL}/posts?filters[slug][$eq]=${slug}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=*`
   );
 
   const data = await res.json();
@@ -67,6 +67,7 @@ export async function fetchPostBySlug(slug: string): Promise<NewsItem & {
     },
   };
 }
+
 
 export async function fetchRandomNews(
   excludeId: number,
