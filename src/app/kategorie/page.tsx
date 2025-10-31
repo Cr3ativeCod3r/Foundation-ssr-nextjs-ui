@@ -1,4 +1,4 @@
-import CategoriesPage from "@/Components/Layout/BottomMenu/CategoriesPage";
+import CategoriesPage from "@/Layout/BottomMenu/CategoriesPage";
 
 const Kategorie: React.FC = () => {
     return (

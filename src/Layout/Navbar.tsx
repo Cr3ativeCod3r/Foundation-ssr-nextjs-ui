@@ -1,12 +1,12 @@
 'use client';
 
 import { fetchCategories } from "@/api/categories";
-import ScrollProgressBar from "@/Components/Layout/ScrollProgress";
+import ScrollProgressBar from "@/Layout/ScrollProgress";
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import logo from '../../../public/img/logo.png';
+import logo from '../../public/img/logo.png';
 import CategoriesDropdown from './Navbar/CategoriesDropdown';
 import FundacjaDropdown from './Navbar/FundacjaDropdown';
 import SocialLinks from './Navbar/SocialLinks';

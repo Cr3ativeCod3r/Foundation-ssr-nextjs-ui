@@ -5,7 +5,6 @@ import { MainArticlesSection } from "@/Components/Home/BoardBottom/MainArticlesS
 import AdBanner from "@/Components/Home/AdBanner";
 import { AdditionalPostsSection } from "@/Components/Home/News12/AdditionalPostsSection";
 import React from "react";
-import { LuBrain } from "react-icons/lu";
 import { Metadata } from "next";
 import WhyHowWhat from "@/Components/WhyHowWhat";
 

@@ -1,4 +1,4 @@
-import FundacjaCategories from "@/Components/Layout/BottomMenu/FundacjaCategories";
+import FundacjaCategories from "@/Layout/BottomMenu/FundacjaCategories";
 
 const Kategorie: React.FC = () => {
     return (

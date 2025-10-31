@@ -33,12 +33,12 @@ export default function BottomMenu() {
               className="flex flex-col items-center py-2 rounded-lg transition-colors relative"
             >
               {activeTab === item.id && (
-                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-8 h-0.5 bg-[#99d1c6]"></div>
+                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-12 h-0.5 bg-[black]"></div>
               )}
-              <div className={`mb-1 ${activeTab === item.id ? 'text-[#99d1c6]' : 'text-gray-500'}`}>
+              <div className={`mb-1 ${activeTab === item.id ? 'text-[black] font-black' : 'text-gray-500'}`}>
                 {item.icon}
               </div>
-              <span className={`text-xs font-medium ${activeTab === item.id ? 'text-[#99d1c6]' : 'text-gray-500'}`}>
+              <span className={`text-xs font-medium ${activeTab === item.id ? 'text-[black] p-1  font-black' : 'text-gray-500'}`}>
                 {item.name}
               </span>
             </Link>
