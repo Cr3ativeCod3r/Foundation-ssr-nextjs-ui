@@ -1,29 +1,26 @@
+
+
 import { fetchCategoryPosts, fetchCategoryBySlug } from '@/api/categories';
 import CategoryPosts from '@/Components/Category/CategoryPosts';
+import MigraineBanner from '@/Components/CategoryBanners/MigrenaBanner';
 import { notFound } from 'next/navigation';
 import { FaBrain } from 'react-icons/fa';
 
 export const dynamic = 'force-dynamic';
 
 interface CategoryPageProps {
-    params: Promise<{ // Zwróć uwagę na Promise
+    params: Promise<{
         kategoria: string;
     }>;
-    searchParams?: Promise<{ // Zwróć uwagę na Promise
+    searchParams?: Promise<{
         page?: string;
     }>;
 }
 
-// Komponent strony musi być async, co już masz
 export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-    // Najpierw await na obiekcie params
     const { kategoria } = await params;
-
-    // Najpierw await na obiekcie searchParams (jeśli istnieje)
     const resolvedSearchParams = await searchParams;
     const pageParam = resolvedSearchParams?.page;
-
-    // Pozostała logika pozostaje taka sama
     const page = Number.isNaN(Number(pageParam)) ? 1 : parseInt(pageParam || '1', 10);
 
     try {
@@ -41,10 +38,12 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
                     <h1 className="text-2xl text-gray-700 font-semibold">{category.name}</h1>
                 </div>
                 <hr className="border-gray-300 mb-6" />
+                {kategoria === 'migrena' && <MigraineBanner />}
+
                 <CategoryPosts
                     initialPosts={postsResponse.data}
                     initialPagination={postsResponse.meta.pagination}
-                    categorySlug={kategoria} // Użyj zdestrukturyzowanej wartości 'kategoria'
+                    categorySlug={kategoria}
                 />
             </div>
         );
@@ -58,4 +57,3 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         );
     }
 }
-
