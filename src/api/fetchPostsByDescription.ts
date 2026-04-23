@@ -1,60 +1,87 @@
-import { ApiResponseItem, NewsItem } from "@/types/news";
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+/**
+ * Search API — Search posts by header, content, or tags
+ */
 
-export async function fetchPostsByDescription(
+import type { NewsItem, ApiResponseItem } from '@/types/news';
+import { buildStrapiUrl, POPULATE_PARAMS, API_URL, apiFetch } from './api-config';
+import { parseNewsItemMinimal } from './api-utils';
+
+/** Supported search fields */
+export type SearchField = 'header' | 'content' | 'tags';
+
+/**
+ * Searches for posts by various criteria.
+ * For tag searches, performs a two-step lookup: find matching tags → find posts with those tags.
+ *
+ * @param searchQuery - Search term
+ * @param searchBy    - Field to search in: 'header', 'content', or 'tags'
+ * @returns Array of matching NewsItem objects
+ */
+export async function searchPosts(
   searchQuery: string,
-  searchBy: 'header' | 'content' | 'tags' = 'content'
+  searchBy: SearchField = 'content',
 ): Promise<NewsItem[]> {
-  let url;
+  try {
+    let url: string;
 
-  if (searchBy === 'tags') {
-    // Krok 1: Znajdź tagi pasujące do searchQuery
-    const tagsUrl = `${API_URL}/tags?filters[Tag][name][$containsi]=${encodeURIComponent(searchQuery)}`;
-    const tagsResponse = await fetch(tagsUrl);
-    const tagsData = await tagsResponse.json();
-
-    // Pobierz documentId wszystkich pasujących tagów
-    const tagDocumentIds = tagsData.data?.map((tag: any) => tag.documentId) || [];
-
-    if (tagDocumentIds.length === 0) {
-      // Brak tagów - zwróć pustą tablicę
-      return [];
+    if (searchBy === 'tags') {
+      url = await buildTagSearchUrl(searchQuery);
+      if (!url) return [];
+    } else {
+      const filterField = searchBy === 'header' ? 'header' : 'content';
+      url = buildStrapiUrl('/posts', {
+        populate: POPULATE_PARAMS.POST_FULL,
+        filters: {
+          [`filters[${filterField}][$containsi]`]: encodeURIComponent(searchQuery),
+        },
+        sort: 'createdAt:desc',
+        pagination: { start: 0, limit: 100 },
+      });
     }
 
-    // Krok 2: Znajdź posty z tymi tagami (używamy $or dla każdego documentId)
-    const filters = tagDocumentIds.map((id: string, index: number) => 
-      `filters[$or][${index}][tags][documentId][$eq]=${id}`
-    ).join('&');
-    
-    url = `${API_URL}/posts?${filters}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=*&populate[tags][populate]=*&sort[0]=createdAt:desc&pagination[start]=0&pagination[limit]=100`;
-  } else {
-    const filterField = searchBy === 'header' ? 'header' : 'content';
-    url = `${API_URL}/posts?filters[${filterField}][$containsi]=${encodeURIComponent(searchQuery)}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=*&populate[tags][populate]=*&sort[0]=createdAt:desc&pagination[start]=0&pagination[limit]=100`;
+    const data = await apiFetch<{ data: ApiResponseItem[] }>(url);
+    return data.data.map((item) => parseNewsItemMinimal(item));
+  } catch (error) {
+    console.error('[searchPosts] Search failed:', error);
+    return [];
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   Internal Helpers
+   ═══════════════════════════════════════════════════ */
+
+interface TagResponse {
+  documentId: string;
+}
+
+/**
+ * Builds a URL for tag-based search.
+ * First finds matching tag IDs, then constructs a filter for posts with those tags.
+ *
+ * @param query - Tag search term
+ * @returns URL string, or empty string if no matching tags found
+ */
+async function buildTagSearchUrl(query: string): Promise<string> {
+  const tagsUrl = buildStrapiUrl('/tags', {
+    filters: {
+      'filters[Tag][name][$containsi]': encodeURIComponent(query),
+    },
+  });
+
+  const tagsData = await apiFetch<{ data: TagResponse[] }>(tagsUrl);
+  const tagDocumentIds = tagsData.data?.map((tag) => tag.documentId) || [];
+
+  if (tagDocumentIds.length === 0) {
+    return '';
   }
 
-  const res = await fetch(url);
-  const data = await res.json();
+  const filters = tagDocumentIds
+    .map((id, index) => `filters[$or][${index}][tags][documentId][$eq]=${id}`)
+    .join('&');
 
-  return data.data.map((item: ApiResponseItem) => ({
-    id: item.id,
-    header: item.header,
-    description: item.description,
-    category: {
-      slug: item.category.slug,
-      name: item.category.name,
-    },
-    imageUrl:
-      (Array.isArray(item.image) && item.image.length > 0 && item.image[0]?.url) ||
-      item.category?.cover_image?.url ||
-      "",
-    slug: item.slug,
-    createdAt: item.createdAt,
-    yt_link: item.yt_link,
-    gallery: item.gallery,
-    tags: Array.isArray(item.tags)
-      ? item.tags.flatMap((tagGroup: { Tag: { name: string }[] }) =>
-        Array.isArray(tagGroup.Tag) ? tagGroup.Tag.map(tag => tag.name) : []
-      )
-      : [],
-  }));
+  return `${API_URL}/posts?${filters}&${POPULATE_PARAMS.POST_FULL.join('&')}&sort[0]=createdAt:desc&pagination[start]=0&pagination[limit]=100`;
 }
+
+// Backward-compatible export name
+export { searchPosts as fetchPostsByDescription };

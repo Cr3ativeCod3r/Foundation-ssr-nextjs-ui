@@ -1,18 +1,15 @@
-import { fetchPostBySlug } from "@/api/news";
-import PostHeader from "@/Components/PostPage/PostHeader";
-import PostContent from "@/Components/PostPage/PostContent";
-import PostGallery from "@/Components/PostPage/PostGallery";
-import PostError from "@/Components/PostPage/PostError";
-import RelatedPosts from "@/Components/RelatedPosts";
+import { fetchPostBySlug } from '@/api/news';
+import PostHeader from '@/Components/PostPage/PostHeader';
+import PostContent from '@/Components/PostPage/PostContent';
+import PostGallery from '@/Components/PostPage/PostGallery';
+import PostError from '@/Components/PostPage/PostError';
+import RelatedPosts from '@/Components/RelatedPosts';
 
 interface PostPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+  params: Promise<{ slug: string }>;
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-
   const { slug } = await params;
 
   try {
@@ -20,8 +17,8 @@ export default async function PostPage({ params }: PostPageProps) {
     const shareUrl = `${process.env.NEXT_PUBLIC_CLEAR_URL}/${postData.category.slug}/${slug}`;
 
     return (
-      <>
-        <div className="mx-auto py-8 lg:w-[65vw] sm:w-[98vw]">
+      <article className="animate-fade-in">
+        <div className="mx-auto py-8 lg:w-[65vw] w-[95vw]">
           <PostHeader
             title={postData.header}
             imageUrl={postData.imageUrl}
@@ -37,17 +34,17 @@ export default async function PostPage({ params }: PostPageProps) {
           {postData.gallery && postData.gallery.length > 0 && (
             <PostGallery
               gallery={postData.gallery.map((image) => ({
-                url: image.url
+                url: image.url,
               }))}
             />
           )}
 
           <RelatedPosts currentPostId={postData.id} />
         </div>
-      </>
+      </article>
     );
   } catch (error) {
-    console.error("Błąd podczas pobierania posta:", error);
+    console.error('[PostPage] Error:', error);
     return <PostError message="Nie udało się załadować posta" />;
   }
 }

@@ -1,6 +1,7 @@
 import { NewsItem } from "@/types/news";
 import Image from "next/image";
 import Link from "next/link";
+import TagsList from "@/Components/tagsTable";
 
 export const ArticleCard: React.FC<{ news: NewsItem }> = ({ news }) => {
     const imageUrl = news.imageUrl
@@ -25,6 +26,7 @@ export const ArticleCard: React.FC<{ news: NewsItem }> = ({ news }) => {
                         <div className="w-full h-full bg-gray-200 rounded-lg" />
                     )}
                 </div>
+                <TagsList tags={news.tags} />
                 <h3 className="font-bold text-gray-600 text-md mb-1 hover-text-green ">{news.header}</h3>
             </div>
         </Link>

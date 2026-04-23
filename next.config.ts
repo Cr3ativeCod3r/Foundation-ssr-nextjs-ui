@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['localhost','admin.neurocamp.pl'],
+    domains: ['localhost','api.chorobymozgu.pl'],
   },
   typescript: {
     ignoreBuildErrors: true

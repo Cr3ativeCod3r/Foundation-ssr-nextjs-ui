@@ -1,100 +1,103 @@
 import { type BlocksContent } from '@strapi/blocks-react-renderer';
+import type { PaginationMeta } from './common';
 
-export interface NewsItem {
-    id: number;
-    yt_link: string;
-    header: string;
-    description: string | null;
-    category: {
-        slug: string;
-        name: string;
-    };
-    content: BlocksContent;
-    slug: string;
-    imageUrl: string;
-    createdAt: string;
-    gallery: {
-        url: string;
-    }[]; 
- tags: {
-        Tag: {
-            name: string;
-        }[];
-    }[];
-    author: {
-        name: string;
-        imageUrl: string;
-    };
-}
-export type ApiResponseItem = {
-    id: number;
-    header: string;
-    description: string;
-    category: {
-        cover_image?: {
-        formats: {
-            small: { url: string };
-            medium: { url: string };
-            large: { url: string };
-        };
-    }
-        slug: string;
-        name: string;
-    };
-    image?: {
-        url: string;
-    };
-    slug: string;
-    createdAt: string;
-    content: BlocksContent;
-    yt_link: string;
-    gallery: string[];
-    publishedAt: string;
-    author: {
-        name: string;
-        image: {
-            url: string;
-        }
-    };
- tags: {
-        Tag: {
-            name: string;
-        }[];
-    }[];
-};
+/* ═══════════════════════════════════════════════════
+   Domain Types — News, Categories, Posts
+   ═══════════════════════════════════════════════════ */
 
-export interface PaginationMeta {
-    page: number;
-    pageSize: number;
-    pageCount: number;
-    total: number;
+/** Author of a post */
+export interface Author {
+  name: string;
+  imageUrl: string;
 }
 
-
+/** Category attached to a post */
 export interface Category {
-    name: string;
+  name: string;
+  slug: string;
+  imageUrl?: string;
+  cover_image?: {
+    url: string;
+    formats: {
+      small: { url: string };
+      medium: { url: string };
+      large: { url: string };
+    };
+  };
+}
+
+/** Gallery image entry */
+export interface GalleryImage {
+  url: string;
+  alternativeText?: string;
+}
+
+/** Tag group structure from Strapi */
+export interface TagGroup {
+  Tag: { name: string }[];
+}
+
+/** Fully parsed news item used in the UI */
+export interface NewsItem {
+  id: number;
+  header: string;
+  description: string | null;
+  category: Pick<Category, 'slug' | 'name'>;
+  content: BlocksContent;
+  slug: string;
+  imageUrl: string;
+  createdAt: string;
+  gallery: GalleryImage[];
+  tags: string[];
+  author: Author;
+  yt_link: string;
+}
+
+/** Raw Strapi API response shape for a single post */
+export interface ApiResponseItem {
+  id: number;
+  header: string;
+  description: string;
+  category: {
     slug: string;
-    imageUrl?: string;
+    name: string;
     cover_image?: {
-        url: string;
-        formats: {
-            small: { url: string };
-            medium: { url: string };
-            large: { url: string };
-        };
+      url: string;
+      formats: {
+        small: { url: string };
+        medium: { url: string };
+        large: { url: string };
+      };
     };
+  };
+  image?: {
+    url: string;
+    formats?: {
+      small?: { url: string };
+      medium?: { url: string };
+      large?: { url: string };
+    };
+  };
+  slug: string;
+  createdAt: string;
+  content: BlocksContent;
+  yt_link: string;
+  gallery: string[];
+  publishedAt: string;
+  author: {
+    name: string;
+    image: { url: string };
+  };
+  tags: TagGroup[];
 }
 
+/** Response shape for paginated post listings */
 export interface PostsResponse {
-    data: NewsItem[];
-    meta: {
-        pagination: PaginationMeta;
-    };
+  data: NewsItem[];
+  meta: {
+    pagination: PaginationMeta;
+  };
 }
 
-// types/banner.ts
-export interface BannerItem {
-    id: number;
-    link: string;
-    imageUrl: string;
-  }
+// Re-export PaginationMeta for backward compatibility
+export type { PaginationMeta } from './common';

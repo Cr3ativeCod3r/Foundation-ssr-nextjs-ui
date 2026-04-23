@@ -1,58 +1,69 @@
-import Image from "next/image";
-import { format } from "date-fns";
-import { pl } from "date-fns/locale";
-import { CiFacebook, CiShare2 } from "react-icons/ci";
+import Image from 'next/image';
+import { format } from 'date-fns';
+import { pl } from 'date-fns/locale';
+import { Facebook, Share2 } from 'lucide-react';
 
-export default function PostMeta({
-  author,
-  date,
-  title,
-  shareUrl
-}: {
+interface PostMetaProps {
   author: { name: string };
   date: string;
   title: string;
   shareUrl: string;
-}) {
-  const formattedDate = format(new Date(date), "d MMMM yyyy", { locale: pl });
+}
+
+export default function PostMeta({ author, date, title, shareUrl }: PostMetaProps) {
+  const formattedDate = format(new Date(date), 'd MMMM yyyy', { locale: pl });
 
   return (
-    <div className="mx-2 ">
-      <h1 className="lg:text-2xl sm: text-xl font-semibold text-left mb-4">{title}</h1>
-      <div className="flex items-center justify-between mb-8 border-b border-gray-200 pb-4">
-        <div className="flex items-center">
-          <div className="w-24 h-24 mt-4 rounded-full overflow-hidden mr-4 border-2 border-blue-500">
+    <div className="mx-2">
+      <h1 className="text-2xl lg:text-3xl font-bold text-slate-900 leading-tight mb-4">
+        {title}
+      </h1>
+
+      <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-4">
+        {/* Author info */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-teal-100 ring-offset-2">
             <Image
               src="/img/avatar.jpg"
-              alt="Avatar"
-              width={68}
-              height={68}
+              alt={author.name}
+              width={48}
+              height={48}
               className="object-cover w-full h-full"
             />
           </div>
           <div>
-            <p className="font-medium text-black">{author.name}</p>
-            <p className="text-sm text-gray-500">{formattedDate}</p>
+            <p className="font-semibold text-sm text-slate-800">{author.name}</p>
+            <p className="text-xs text-slate-400">{formattedDate}</p>
           </div>
         </div>
 
-        {/* Ikony w prawym rogu */}
-        <div className="flex items-center">
+        {/* Share buttons */}
+        <div className="flex items-center gap-2">
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 text-3xl"
+            aria-label="Udostępnij na Facebook"
+            className="
+              p-2 rounded-lg text-blue-500
+              hover:bg-blue-50 hover:text-blue-600
+              transition-all duration-200
+            "
           >
-            <CiFacebook />
+            <Facebook size={20} />
           </a>
           <a
             href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(shareUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-gray-600 hover:text-gray-800 text-xl"
+            aria-label="Udostępnij na LinkedIn"
+            className="
+              p-2 rounded-lg text-slate-400
+              hover:bg-slate-100 hover:text-slate-600
+              transition-all duration-200
+            "
           >
-            <CiShare2 />
+            <Share2 size={18} />
           </a>
         </div>
       </div>

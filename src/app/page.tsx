@@ -66,8 +66,6 @@ export default function Home() {
                 <AdBanner
                   bannerId={1}
                   interval={8000}
-                  width="w-full"
-                  height="20vh"
                 />
               </div>
               <MainArticlesSection />

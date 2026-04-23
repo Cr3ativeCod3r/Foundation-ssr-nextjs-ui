@@ -1,112 +1,110 @@
-import { NewsItem, ApiResponseItem } from "@/types/news";
+/**
+ * News API — Fetch posts, single posts, and random suggestions
+ */
 
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+import type { NewsItem, ApiResponseItem } from '@/types/news';
+import { buildStrapiUrl, POPULATE_PARAMS, apiFetch } from './api-config';
+import { parseNewsItem, parseNewsItemMinimal } from './api-utils';
 
-export async function fetchLatestNews(start: number = 0, limit: number = 5): Promise<NewsItem[]> {
-  const res = await fetch(
-    `${API_URL}/posts?populate[category][populate]=cover_image&populate=image&populate[tags][populate]=*&sort=createdAt:desc&pagination[start]=${start}&pagination[limit]=${limit}`
-  );
-  const data = await res.json();
+/* ═══════════════════════════════════════════════════
+   Latest News
+   ═══════════════════════════════════════════════════ */
 
-  return data.data.map((item: ApiResponseItem) => ({
-    id: item.id,
-    header: item.header,
-    category: {
-      slug: item.category.slug,
-    },
-    imageUrl:
-      item.category?.cover_image?.url ||
-      (Array.isArray(item.image) && item.image.length > 0 && item.image[0]?.formats?.medium?.url) ||
-      "",
-    slug: item.slug,
-    description: item.description,
-    createdAt: item.createdAt,
-    tags: Array.isArray(item.tags)
-      ? item.tags.flatMap((tagGroup: { Tag: { name: string }[] }) =>
-        Array.isArray(tagGroup.Tag) ? tagGroup.Tag.map(tag => tag.name) : []
-      )
-      : [],
+/**
+ * Fetches the latest news posts with offset-based pagination.
+ *
+ * @param start - Starting index (0-based offset)
+ * @param limit - Maximum number of posts to return
+ * @returns Array of parsed NewsItem objects
+ */
+export async function fetchLatestNews(
+  start: number = 0,
+  limit: number = 5,
+): Promise<NewsItem[]> {
+  const url = buildStrapiUrl('/posts', {
+    populate: POPULATE_PARAMS.POST_STANDARD,
+    sort: 'createdAt:desc',
+    pagination: { start, limit },
+  });
 
-  }));
+  try {
+    const data = await apiFetch<{ data: ApiResponseItem[] }>(url);
+    return data.data.map((item) => parseNewsItemMinimal(item));
+  } catch (error) {
+    console.error('[fetchLatestNews] Failed to fetch latest news:', error);
+    return [];
+  }
 }
 
-export async function fetchPostBySlug(slug: string): Promise<NewsItem & {
-  content: string;
-  author: {
-    name: string;
-    imageUrl: string;
-  };
-}> {
-  const res = await fetch(
-    `${API_URL}/posts?filters[slug][$eq]=${slug}&populate[category][populate]=cover_image&populate=image&populate[gallery][populate]=*`
-  );
+/* ═══════════════════════════════════════════════════
+   Single Post
+   ═══════════════════════════════════════════════════ */
 
-  const data = await res.json();
-
-  const item: ApiResponseItem = data.data[0];
-
-  return {
-    id: item.id,
-    header: item.header,
-    category: {
-      slug: item.category.slug,
-      name: item.category.name,
+/**
+ * Fetches a single post by its URL slug.
+ * Returns full post data including content, author, and gallery.
+ *
+ * @param slug - Post URL slug
+ * @returns Fully parsed NewsItem
+ * @throws When post is not found or request fails
+ */
+export async function fetchPostBySlug(slug: string): Promise<NewsItem> {
+  const url = buildStrapiUrl('/posts', {
+    populate: POPULATE_PARAMS.POST_FULL,
+    filters: {
+      'filters[slug][$eq]': slug,
     },
-    imageUrl:
-      (Array.isArray(item.image) && item.image.length > 0 && item.image[0]?.url) ||
-      item.category?.cover_image?.url ||
-      "",
-    slug: item.slug,
-    createdAt: item.createdAt,
-    content: item.content,
-    yt_link: item.yt_link,
-    gallery: item.gallery,
-    author: {
-      name: item.author?.name || "Fundacja Choroby Mózgu",
-      imageUrl: item.author?.image?.url || "",
-    },
-  };
+  });
+
+  const data = await apiFetch<{ data: ApiResponseItem[] }>(url);
+
+  if (!data.data || data.data.length === 0) {
+    throw new Error(`Post not found: ${slug}`);
+  }
+
+  return parseNewsItem(data.data[0]);
 }
 
+/* ═══════════════════════════════════════════════════
+   Random / Related Posts
+   ═══════════════════════════════════════════════════ */
 
+/**
+ * Fetches random posts, excluding a specific post by ID.
+ * Used for "Related Posts" / "See Also" sections.
+ *
+ * @param excludeId - Post ID to exclude from results
+ * @param _start    - Unused, kept for API compatibility
+ * @param limit     - Number of random posts to return
+ * @returns Array of randomly selected NewsItem objects
+ */
 export async function fetchRandomNews(
   excludeId: number,
-  start: number = 0,
-  limit: number = 5
+  _start: number = 0,
+  limit: number = 5,
 ): Promise<NewsItem[]> {
-  const res = await fetch(
-    `${API_URL}/posts?` +
-    `populate[category][populate]=cover_image&` +
-    `populate=image&` +
-    `filters[id][$ne]=${excludeId}&` +
-    `populate[tags][populate]=*&` +
-    `sort=createdAt:desc&`+
-    `pagination[start]=0&` +
-    `pagination[limit]=50`
-  );
-
-  const data = await res.json();
-
-  const shuffled = data.data.sort(() => 0.5 - Math.random());
-  const selected = shuffled.slice(0, limit);
-
-  return selected.map((item: ApiResponseItem) => ({
-    id: item.id,
-    header: item.header,
-    category: {
-      slug: item.category.slug,
+  const url = buildStrapiUrl('/posts', {
+    populate: POPULATE_PARAMS.POST_STANDARD,
+    filters: {
+      'filters[id][$ne]': excludeId,
     },
-    imageUrl:
-      (Array.isArray(item.image) && item.image.length > 0 && item.image[0]?.formats?.medium?.url) ||
-      item.category?.cover_image?.formats?.medium?.url ||
-      "",
-    slug: item.slug,
-    description: item.description,
-    createdAt: item.createdAt,
-  tags: Array.isArray(item.tags)
-      ? item.tags.flatMap((tagGroup: { Tag: { name: string }[] }) =>
-        Array.isArray(tagGroup.Tag) ? tagGroup.Tag.map(tag => tag.name) : []
-      )
-      : [],
-  }));
+    sort: 'createdAt:desc',
+    pagination: { start: 0, limit: 50 },
+  });
+
+  try {
+    const data = await apiFetch<{ data: ApiResponseItem[] }>(url);
+
+    // Fisher-Yates shuffle for unbiased random selection
+    const items = [...data.data];
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+
+    return items.slice(0, limit).map((item) => parseNewsItemMinimal(item));
+  } catch (error) {
+    console.error('[fetchRandomNews] Failed to fetch random news:', error);
+    return [];
+  }
 }

@@ -1,49 +1,53 @@
-'use client'
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
 
 export default function ScrollProgressBar() {
-  const topOffset = 100;
-  const height = 4;
-  const color = "#3b82f6";
-  const backgroundColor = "#e5e7eb";
+  const [progress, setProgress] = useState(0);
 
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPosition = window.scrollY;
-      const progress = (scrollPosition / totalHeight) * 100;
-      setScrollProgress(parseFloat(progress.toFixed(2)));
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+  const updateProgress = useCallback(() => {
+    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (totalHeight <= 0) {
+      setProgress(0);
+      return;
+    }
+    const currentProgress = (window.scrollY / totalHeight) * 100;
+    setProgress(Math.min(currentProgress, 100));
   }, []);
 
+  useEffect(() => {
+    let rafId: number;
+
+    const handleScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateProgress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    updateProgress();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, [updateProgress]);
+
   return (
-    <div 
-      style={{ top: `${topOffset}px` }}
+    <div
       role="progressbar"
-      aria-valuenow={scrollProgress}
+      aria-valuenow={Math.round(progress)}
       aria-valuemin={0}
       aria-valuemax={100}
       aria-label="Postęp przewijania strony"
+      className="w-full h-[3px] bg-gray-100/50"
     >
-      <div 
-        className="w-full" 
-        style={{ height: `${height}px`, backgroundColor }}
-      >
-        <div
-          className="h-full transition-all duration-150 ease-out bg-[#99d1c8]"
-          style={{ 
-            width: `${scrollProgress}%`,
-          }}
-        />
-      </div>
+      <div
+        className="h-full transition-[width] duration-100 ease-out"
+        style={{
+          width: `${progress}%`,
+          background: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light))',
+        }}
+      />
     </div>
   );
 }

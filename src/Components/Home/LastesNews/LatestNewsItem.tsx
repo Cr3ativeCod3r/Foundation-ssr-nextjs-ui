@@ -27,9 +27,9 @@ export const LatestNewsItem: React.FC<{ news: NewsItem }> = ({ news }) => {
                     ) : (
                         <div className="aspect-4/3 w-full bg-gray-100 rounded-lg"></div>
                     )}
-                  <TagsList tags={news.tags} />
                 </div>
-                <div className="w-3/5 pl-3 flex items-center">
+                <div className="w-3/5 pl-3 flex flex-col justify-center">
+                    <TagsList tags={news.tags} />
                     <h3 className="text-sm leading-snug hover-text-green font-bold text-gray-700">{news.header}</h3>
                 </div>
             </div>

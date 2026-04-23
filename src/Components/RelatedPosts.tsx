@@ -1,57 +1,20 @@
-'use client'
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { fetchRandomNews } from "@/api/news";
-import TagsList from "@/Components/tagsTable";
+'use client';
 
-type NewsItem = {
-  id: number;
-  header: string;
-  category: {
-    slug: string;
-  };
-  imageUrl: string;
-  slug: string;
-  description: string | null;
-  createdAt: string;
-};
+import { useEffect, useState } from 'react';
+import { fetchRandomNews } from '@/api/news';
+import ArticleCard from '@/components/ui/Card';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { ArticleCardSkeleton } from '@/components/ui/Skeleton';
+import { Sparkles } from 'lucide-react';
+import type { NewsItem } from '@/types/news';
 
-const PostCard = ({ post }: { post: NewsItem }) => {
-  const formattedDate = new Date(post.createdAt).toLocaleDateString('pl-PL', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
+interface RelatedPostsProps {
+  currentPostId: number;
+}
 
-  const imageUrl = `${process.env.NEXT_PUBLIC_DOMAIN_URL}${post.imageUrl}`;
-
-  return (
-    <Link href={`/${post.category.slug}/${post.slug}`}>
-      <div className="flex flex-col h-full rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 bg-white">
-        <div className="relative h-48 overflow-hidden">
-          <Image
-            src={imageUrl}
-            alt={post.header}
-            fill
-            style={{ objectFit: 'cover' }}
-          />
-        </div>
-        <div className="p-4 flex-1 flex flex-col">
-          <TagsList tags={post.tags} />
-          <h3 className="text-lg font-bold mb-2 line-clamp-2">{post.header}</h3>
-          <p className="text-gray-600 text-sm mb-4 line-clamp-3">{post.description}</p>
-          <div className="mt-auto text-xs text-gray-500">{formattedDate}</div>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-const RelatedPosts = ({ currentPostId }: { currentPostId: number }) => {
+const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPostId }) => {
   const [relatedPosts, setRelatedPosts] = useState<NewsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadRelatedPosts = async () => {
@@ -59,9 +22,8 @@ const RelatedPosts = ({ currentPostId }: { currentPostId: number }) => {
         setIsLoading(true);
         const posts = await fetchRandomNews(currentPostId, 0, 6);
         setRelatedPosts(posts);
-      } catch (err) {
-        console.error("Błąd podczas pobierania powiązanych postów:", err);
-        setError("Nie udało się załadować powiązanych postów");
+      } catch (error) {
+        console.error('[RelatedPosts] Failed to load:', error);
       } finally {
         setIsLoading(false);
       }
@@ -70,28 +32,27 @@ const RelatedPosts = ({ currentPostId }: { currentPostId: number }) => {
     loadRelatedPosts();
   }, [currentPostId]);
 
-  if (isLoading) {
-    return <div className="py-8">Ładowanie powiązanych postów...</div>;
-  }
-
-  if (error) {
-    return <div className="py-8 text-red-500">{error}</div>;
-  }
-
-  if (relatedPosts.length === 0) {
+  if (!isLoading && relatedPosts.length === 0) {
     return null;
   }
 
   return (
-    <div className="py-8 px-4">
-      <h2 className="text-2xl font-bold mb-6">Sprawdź także</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {relatedPosts.map(post => (
-          <div key={post.id} className="w-full">
-            <PostCard post={post} />
-          </div>
-        ))}
-      </div>
+    <div className="py-10 border-t border-slate-100 mt-8">
+      <SectionHeader title="Sprawdź także" icon={<Sparkles size={18} />} />
+
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <ArticleCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+          {relatedPosts.map((post) => (
+            <ArticleCard key={post.id} news={post} showReadMore />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,181 +1,121 @@
-"use client";
+'use client';
 
-// import React, { useEffect, useState } from "react";
-// import Image from "next/image";
-// import { fetchBanners } from "@/api/banners";
-// import { BannerItem } from "@/types/news";
-
-// export const AdBanner: React.FC<{ className?: string }> = ({ className }) => {
-//   const [banner, setBanner] = useState<BannerItem | null>(null);
-
-//   useEffect(() => {
-//     async function loadBanner() {
-//       const banners = await fetchBanners();
-//       if (banners.length > 0) {
-//         setBanner(banners[0]);
-//       }
-//     }
-
-//     loadBanner();
-//   }, []);
-
-//   if (!banner) {
-//     return (
-//       <div className={`bg-gray-100 border border-gray-200 flex items-center justify-center mb-6 aspect-[4/1] w-full ${className}`}>
-//         <span className="text-gray-500">Ładowanie...</span>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className={`relative  bg-gray-100 border border-gray-200 mb-6 ${className}`}>
-//       <a href={banner.link} target="_blank" rel="noopener noreferrer" className="w-full h-full block relative">
-//         <Image 
-//           src={banner.imageUrl} 
-//           alt="Baner sponsorowany"
-//           fill
-//           className="object-cover" // najważniejsza zmiana
-//           sizes="(max-width: 768px) 100vw, 800px"
-//         />
-//       </a>
-//     </div>
-//   );
-// };
-import React, { useEffect, useState, useRef } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { fetchBanners } from "@/api/banners";
-import { BannerItem } from "@/types/news";
-import styles from "./AdBanner.module.css";
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { fetchBanners } from '@/api/banners';
+import type { BannerItem } from '@/types/banner';
 
 interface AdBannerProps {
   bannerId?: number;
   className?: string;
-  interval?: number; // Time in milliseconds between transitions
+  interval?: number;
   width?: string | number;
   height?: string | number;
 }
 
-const AdBanner: React.FC<AdBannerProps> = ({ 
-  bannerId = 1, 
-  className = "",
-  interval = 3000, // Default to 3 seconds
-  width = "100%",
-  height = "auto"
+const AdBanner: React.FC<AdBannerProps> = ({
+  bannerId = 1,
+  className = '',
+  interval = 3000,
 }) => {
   const [banners, setBanners] = useState<BannerItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isFading, setIsFading] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const loadBanner = async () => {
+    const loadBanners = async () => {
       try {
         setIsLoading(true);
-        const bannerData = await fetchBanners(bannerId);
-        setBanners(bannerData);
-      } catch (err) {
-        console.error("Failed to load banner:", err);
-        setError("Failed to load banner");
+        const data = await fetchBanners(bannerId);
+        setBanners(data);
+      } catch (error) {
+        console.error('[AdBanner] Failed to load:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadBanner();
-
-    // Clean up function to clear the timer when component unmounts
+    loadBanners();
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [bannerId]);
 
-  // Set up rotation timer when banners are loaded
-  useEffect(() => {
-    // Only set up rotation if there are multiple banners
-    if (banners.length > 1 && !isLoading) {
-      timerRef.current = setInterval(() => {
-        setIsFading(true);
-        
-        // Wait for fade out animation to complete
-        setTimeout(() => {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
-          
-          // Wait a bit before starting fade in
-          setTimeout(() => {
-            setIsFading(false);
-          }, 50);
-        }, 300); // This should match the CSS transition time
-      }, interval);
-    }
+  const advanceSlide = useCallback(() => {
+    setIsFading(true);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % banners.length);
+      setTimeout(() => setIsFading(false), 50);
+    }, 300);
+  }, [banners.length]);
 
+  useEffect(() => {
+    if (banners.length > 1 && !isLoading) {
+      timerRef.current = setInterval(advanceSlide, interval);
+    }
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [banners, isLoading, interval]);
+  }, [banners, isLoading, interval, advanceSlide]);
 
   if (isLoading) {
     return (
-      <div 
-        className={styles["ad-banner-skeleton"]} 
-        style={{ width, height }}
-      ></div>
+      <div className="animate-shimmer rounded-xl w-full h-[120px] md:h-[200px]" />
     );
   }
-  
-  if (error) {
-    return (
-      <div 
-        className={styles["ad-banner-error"]}
-        style={{ width, height }}
-      >
-        {error}
-      </div>
-    );
-  }
-  
+
   if (banners.length === 0) return null;
 
   const currentBanner = banners[currentIndex];
 
   return (
-    <div 
-      className={`${styles["ad-banner-container"]} ${className}`}
-      style={{ width, height }}
+    <div
+      className={`relative overflow-hidden rounded-xl shadow-md w-full ${className}`}
     >
-      <Link 
-        href={currentBanner.link || "#"} 
-        key={currentBanner.id} 
-        target="_blank" 
+      {/* Ad label */}
+      <span className="absolute top-2 left-2 z-10 text-[10px] font-medium text-white/80 bg-black/30 px-2 py-0.5 rounded backdrop-blur-sm">
+        Reklama
+      </span>
+
+      <Link
+        href={currentBanner.link || '#'}
+        target="_blank"
         rel="noopener noreferrer"
-        className={styles["banner-link"]}
+        className="block w-full"
       >
-        <div className={styles["ad-banner-item"]}>
-          <Image
-            src={currentBanner.imageUrl}
-            alt="Advertisement"
-            fill
-            priority // Added priority prop to address the LCP warning
-            className={`${styles["ad-banner-image"]} ${isFading ? styles["fade-out"] : styles["fade-in"]}`}
-            style={{ objectFit: "cover" }}
-          />
-        </div>
+        {/* Use img tag for natural sizing — no cropping */}
+        <img
+          src={currentBanner.imageUrl}
+          alt="Baner sponsorowany"
+          className={`
+            w-full h-auto max-h-[35vh] object-contain
+            transition-opacity duration-300
+            ${isFading ? 'opacity-0' : 'opacity-100'}
+          `}
+        />
       </Link>
-      
-      {/* Pagination indicators for multiple banners */}
+
+      {/* Pagination dots */}
       {banners.length > 1 && (
-        <div className={styles["banner-pagination"]}>
+        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
           {banners.map((_, index) => (
-            <span 
-              key={`indicator-${index}`}
-              className={`${styles["pagination-dot"]} ${index === currentIndex ? styles["active"] : ''}`}
-              onClick={() => setCurrentIndex(index)}
+            <button
+              key={index}
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentIndex(index);
+              }}
+              className={`
+                w-2 h-2 rounded-full transition-all duration-200
+                ${index === currentIndex
+                  ? 'bg-white scale-125'
+                  : 'bg-white/50 hover:bg-white/70'
+                }
+              `}
+              aria-label={`Przejdź do banera ${index + 1}`}
             />
           ))}
         </div>

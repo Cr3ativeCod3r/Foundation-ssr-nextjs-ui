@@ -1,84 +1,55 @@
-// import { BannerItem } from "@/types/news";
+/**
+ * Banners API — Fetch rotating ad/promotional banners
+ */
 
-// const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-// const DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL;
-
-// export async function fetchBanners(): Promise<BannerItem[]> {
-//   const res = await fetch(`${API_URL}/banner-1?populate=*`);
-//   const data = await res.json();
-
-//   return data.data.map((item: any) => {
-//     const coverPhoto = Array.isArray(item.cover_image) && item.cover_image.length > 0
-//       ? item.cover_image[0]
-//       : null;
-
-//     const imageUrl =
-//       coverPhoto?.url ||
-//       coverPhoto?.formats?.medium?.url ||
-//       coverPhoto?.formats?.large?.url ||
-//       "";
-
-//     return {
-//       id: item.id,
-//       link: item.cover_image.caption,
-//       imageUrl: `${DOMAIN_URL}${imageUrl}`,
-//     };
-//   });
-// }
-
-import { BannerItem } from "@/types/news";
-
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-const DOMAIN_URL = process.env.NEXT_PUBLIC_DOMAIN_URL;
+import type { BannerItem, BannerImage } from '@/types/banner';
+import { API_URL, DOMAIN_URL } from './api-config';
 
 /**
- * Fetches banner data from Strapi API
- * @param bannerId - The ID of the banner to fetch, defaults to 1
- * @returns Array of BannerItem objects
+ * Fetches banner images from Strapi for a specific banner slot.
+ * Returns an array of banner items with resolved image URLs.
+ *
+ * @param bannerId - Banner slot identifier (defaults to 1)
+ * @returns Array of BannerItem objects with full image URLs
  */
 export async function fetchBanners(bannerId: number = 1): Promise<BannerItem[]> {
   try {
     const res = await fetch(`${API_URL}/banner-${bannerId}?populate=*`);
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch banners: ${res.status}`);
     }
-    
+
     const responseData = await res.json();
-    
-    // Check if the data has the expected structure
-    if (!responseData.data || !responseData.data.cover_image) {
-      console.error("Unexpected API response structure:", responseData);
+
+    if (!responseData.data?.cover_image) {
+      console.error('[fetchBanners] Unexpected response structure:', responseData);
       return [];
     }
-    
-    // Extract the cover_image array from the response
-    const coverImages = responseData.data.cover_image;
-    
-    // Ensure coverImages is an array
+
+    const coverImages: BannerImage[] = responseData.data.cover_image;
+
     if (!Array.isArray(coverImages)) {
-      console.error("Cover images is not an array:", coverImages);
+      console.error('[fetchBanners] cover_image is not an array:', coverImages);
       return [];
     }
-    
-    // Map each cover image to a BannerItem
-    return coverImages.map((image: any) => {
-      // Determine the best available image URL
-      const imageUrl = 
+
+    return coverImages.map((image) => {
+      const imageUrl =
         image.url ||
-        (image.formats?.medium?.url) ||
-        (image.formats?.large?.url) ||
-        (image.formats?.small?.url) ||
-        "";
-      
+        image.formats?.medium?.url ||
+        image.formats?.large?.url ||
+        image.formats?.small?.url ||
+        '';
+
       return {
         id: image.id,
-        link: image.caption || "", // Get the link from the caption
+        link: image.caption || '',
         imageUrl: `${DOMAIN_URL}${imageUrl}`,
       };
     });
   } catch (error) {
-    console.error("Error fetching banners:", error);
+    console.error('[fetchBanners] Error:', error);
     return [];
   }
 }
