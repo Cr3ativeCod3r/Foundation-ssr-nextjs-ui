@@ -57,7 +57,7 @@ export default function RootLayout({
     <html lang="pl">
       <body className={`${inter.variable} antialiased bg-[var(--color-surface)]`}>
         <Navbar />
-        <main className="pt-[100px] pb-16 lg:pb-0">
+        <main>
           <TransitionProvider>{children}</TransitionProvider>
         </main>
         <Footer />

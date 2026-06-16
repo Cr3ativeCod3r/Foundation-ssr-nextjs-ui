@@ -4,8 +4,8 @@ import { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Slider from '@/Components/Map/Layout/Slider';
 import Select from 'react-select';
-
-import { MdManageSearch } from "react-icons/md";
+import Link from 'next/link';
+import { MdManageSearch, MdArrowBack } from "react-icons/md";
 import { customLayerNames } from '@/Components/Map/Components/Layers';
 
 // Import types only
@@ -77,41 +77,67 @@ const MapCard: React.FC = () => {
 
     return (
         <>
-            <div className='overflow-hidden h-[100vh] bg-white mt-[-120px] z-999'>
+            <div className='overflow-hidden h-[100vh] bg-white z-[999] flex flex-col'>
                 <Slider isSliderOpen={isSliderOpen} toggleSlider={toggleSlider} marker={selectedMarker} />
 
-                <div className="h-[87vh] mt-[100px] w-full relative show-in flex lg:flex-row sm: flex-col">
-      <div className="absolute z-10 top-2 w-full flex justify-center">
-  <div className="flex flex-col lg:flex-row items-center justify-center gap-4 w-[90vw] max-w-[600px] mt-12">
-    {/* Select kategorii */}
-    <div className="flex items-center bg-white p-2 rounded shadow-md w-full lg:w-[280px]">
-      <MdManageSearch className="text-2xl text-gray-500 mr-2" />
-      <Select
-        options={customLayerNames}
-        onChange={handleCategoryChange}
-        onFocus={() => setSliderOpen(false)}
-        placeholder="Wybierz kategorię..."
-        className="w-full text-slate-800"
-        value={customLayerNames.find(layer => layer.value === selectedCategory)}
-      />
-    </div>
+                {/* Oddzielne miejsce na wybór choroby NAD mapą */}
+                <div className="pt-4 pb-3 bg-white w-full border-b border-slate-100 shadow-sm z-10 shrink-0">
+                  <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <div className="flex gap-2 px-4 w-max mx-auto items-center">
+                      
+                      {/* Przycisk Wyjdź */}
+                      <Link href="/" className="whitespace-nowrap px-4 py-2 rounded-full text-[13px] font-bold bg-slate-800 text-[#ffffff] shadow-md hover:bg-slate-700 transition-all flex items-center gap-1.5 mr-1">
+                        <MdArrowBack size={16} color="#ffffff" /> <span style={{ color: '#ffffff' }}>Wyjdź</span>
+                      </Link>
 
-    {/* Select punktów */}
-    <div className="flex items-center bg-white p-2 rounded shadow-md w-full lg:w-[280px]">
-      <MdManageSearch className="text-2xl text-gray-500 mr-2" />
-      <Select
-        options={memoizedMarkers.map(marker => ({
-          value: marker._id,
-          label: marker.department,
-        }))}
-        onFocus={() => setSliderOpen(false)}
-        onChange={handlePointSelection}
-        placeholder="Szukaj punktu..."
-        className="w-full text-slate-800"
-      />
-    </div>
-  </div>
-</div>
+                      {customLayerNames.map(layer => (
+                        <button
+                          key={layer.value}
+                          onClick={() => {
+                            setSelectedCategory(layer.value);
+                            handleCategoryChange(layer);
+                          }}
+                          className={`
+                            whitespace-nowrap px-5 py-2 rounded-full text-[13px] font-semibold transition-all duration-300 border
+                            ${selectedCategory === layer.value 
+                              ? 'bg-teal-600 text-white border-teal-600 shadow-md' 
+                              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                            }
+                          `}
+                        >
+                          {layer.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Kontener Mapy */}
+                <div className="flex-1 w-full relative show-in flex lg:flex-row flex-col min-h-0">
+                  <div className="absolute z-[1000] top-4 w-full flex flex-col items-center pointer-events-none px-4">
+                    {/* Szukaj placówki */}
+                    <div className="flex items-center bg-white/95 backdrop-blur-md p-1.5 rounded-full shadow-lg w-full max-w-md pointer-events-auto border border-slate-200/60">
+                      <MdManageSearch className="text-3xl text-teal-600 ml-2" />
+                      <Select
+                        options={memoizedMarkers.map(marker => ({
+                          value: marker._id,
+                          label: marker.department,
+                        }))}
+                        onFocus={() => setSliderOpen(false)}
+                        onChange={handlePointSelection}
+                        placeholder="Szukaj placówki..."
+                        className="w-full text-sm font-medium"
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            border: 0,
+                            boxShadow: 'none',
+                            background: 'transparent',
+                          })
+                        }}
+                      />
+                    </div>
+                  </div>
                     <MapComponent 
                         setMarkers={setMarkers}
                         setSelectedMarker={setSelectedMarker}

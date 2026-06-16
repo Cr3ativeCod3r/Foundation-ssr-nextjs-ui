@@ -4,6 +4,7 @@ import { fetchCategories } from '@/api/categories';
 import ScrollProgressBar from '@/Layout/ScrollProgress';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useState, useCallback } from 'react';
 import logo from '../../public/img/logo.png';
 import CategoriesDropdown from './Navbar/CategoriesDropdown';
@@ -19,6 +20,7 @@ const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
 
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
@@ -48,6 +50,8 @@ const Navbar: React.FC = () => {
     }
     loadCategories();
   }, []);
+
+  if (pathname === '/mapa') return null;
 
   return (
     <>
