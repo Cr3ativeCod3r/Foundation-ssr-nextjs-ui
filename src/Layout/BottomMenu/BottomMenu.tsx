@@ -22,10 +22,10 @@ export default function BottomMenu() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-      {/* Glassmorphism bar */}
-      <nav className="bg-white/90 backdrop-blur-xl border-t border-gray-200/50 shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-        <div className="max-w-screen-xl mx-auto flex justify-around items-center py-1.5 px-2">
+    <div className="fixed bottom-4 left-4 right-4 z-50 lg:hidden flex justify-center pointer-events-none">
+      {/* Floating Glassmorphism Island - Dark Mode Ultra Glass */}
+      <nav className="w-full max-w-sm bg-slate-900/40 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-full p-1.5 pointer-events-auto">
+        <div className="flex justify-between items-center w-full">
           {MENU_ITEMS.map((item) => {
             const active = isActive(item.id);
             const Icon = item.icon;
@@ -34,29 +34,19 @@ export default function BottomMenu() {
               <Link
                 key={item.id}
                 href={item.id}
-                className="flex flex-col items-center py-1.5 px-2 rounded-xl transition-all duration-200 relative group"
+                className={`
+                  flex flex-col items-center justify-center flex-1 py-1.5 rounded-full transition-all duration-300
+                  ${active 
+                    ? 'bg-teal-500 text-white shadow-md transform scale-105' 
+                    : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }
+                `}
               >
-                {/* Active indicator dot */}
-                {active && (
-                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-teal-500" />
-                )}
-
-                <div
-                  className={`
-                    mb-0.5 transition-all duration-200
-                    ${active
-                      ? 'text-teal-600 scale-110'
-                      : 'text-slate-400 group-hover:text-slate-600'
-                    }
-                  `}
-                >
-                  <Icon size={20} strokeWidth={active ? 2.5 : 2} />
-                </div>
-
+                <Icon size={active ? 22 : 20} strokeWidth={active ? 2.5 : 2} />
                 <span
                   className={`
-                    text-[10px] font-medium transition-colors duration-200
-                    ${active ? 'text-teal-600' : 'text-slate-400 group-hover:text-slate-600'}
+                    text-[10px] font-medium mt-0.5 whitespace-nowrap transition-colors duration-200
+                    ${active ? 'text-white' : 'text-white/70'}
                   `}
                 >
                   {item.name}

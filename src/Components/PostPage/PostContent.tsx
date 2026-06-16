@@ -7,7 +7,7 @@ function PostContent({
   content: BlocksContent 
 }) {
   return (
-    <div className="prose max-w-none mb-8">
+    <div className="prose max-w-none mb-8 card-elevated p-6 md:p-10">
       <ContentRenderer content={content} />
     </div>
   );

@@ -14,7 +14,7 @@ export default function AboutPage() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await axios.get(`${API_URL}/../o-fundacji`);
+        const response = await axios.get(`${API_URL}/o-fundacji`);
         setContent(response.data.data.content);
       } catch (error) {
         console.error('[AboutPage] Error fetching content:', error);

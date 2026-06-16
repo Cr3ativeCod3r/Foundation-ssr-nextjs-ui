@@ -4,7 +4,7 @@
 
 .content_render {
   font-family: "Inter", "Source Sans Pro", system-ui, sans-serif;
-  font-size: 1.125rem;
+  font-size: 1rem;
   line-height: 1.8;
   color: var(--color-text-primary);
   margin: 0 auto;
@@ -338,7 +338,7 @@
 
 @media screen and (max-width: 768px) {
   .content_render {
-    font-size: 1rem;
+    font-size: 0.9375rem;
     padding: 0.75em;
   }
 
