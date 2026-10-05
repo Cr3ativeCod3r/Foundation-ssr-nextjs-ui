@@ -239,3 +239,26 @@ body {
   background: var(--color-primary-pale);
   color: var(--color-primary-dark);
 }
+/* Endless marquee drifting left (WhyHowWhat on mobile) — track holds its items twice */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Mobile only — from md the section is a static grid */
+@media (max-width: 767px) {
+  .animate-marquee-left {
+    animation: marquee-left 40s linear infinite;
+  }
+
+  .animate-marquee-left:hover,
+  .animate-marquee-left:active {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-left {
+    animation: none;
+  }
+}

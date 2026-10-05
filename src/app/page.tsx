@@ -1,4 +1,4 @@
-import { PartnersSection } from "@/Components/Home/PartnersSection";
+// import { PartnersSection } from "@/Components/Home/PartnersSection"; // Nieużywane — sekcja wyłączona
 import { LatestNewsSection } from "@/Components/Home/LastesNews/LatestNewsSection";
 import { MainNewsSectionTop } from "@/Components/Home/BoardTop/MainNewsSectionTop";
 import { MainArticlesSection } from "@/Components/Home/BoardBottom/MainArticlesSection";
@@ -7,6 +7,9 @@ import { AdditionalPostsSection } from "@/Components/Home/News12/AdditionalPosts
 import React from "react";
 import { Metadata } from "next";
 import WhyHowWhat from "@/Components/WhyHowWhat";
+import { fetchLatestVideos } from "@/api/youtube";
+import { fetchLatestReports } from "@/api/reports";
+import { LatestReportsSection } from "@/Components/Home/LatestReports/LatestReportsSection";
 
 export const metadata: Metadata = {
   title: "Choroby Mózgu - Rzetelna wiedza o neurologii i zdrowiu psychicznym",
@@ -42,7 +45,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+// Re-fetch the YouTube feed at most once an hour
+export const revalidate = 3600;
+
+export default async function Home() {
+  const [videos, reports] = await Promise.all([fetchLatestVideos(5), fetchLatestReports(1)]);
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {/* <div className="lg:w-[85vw] sm: w-[95vw] mx-auto mt-8">
@@ -58,7 +66,8 @@ export default function Home() {
         <div className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-4">
-              <LatestNewsSection />
+              <LatestReportsSection reports={reports} />
+              <LatestNewsSection videos={videos} />
             </div>
             <div className="lg:col-span-8">
               <MainNewsSectionTop />
@@ -75,7 +84,7 @@ export default function Home() {
         </div>
       </main>
 
-      <PartnersSection />
+      {/* <PartnersSection /> */}
     </div>
   );
 }
