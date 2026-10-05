@@ -5,6 +5,7 @@ import { User, Mail, MessageSquare, Send } from 'lucide-react';
 import axios from 'axios';
 import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
+import { API_URL } from '@/api/api-config';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface FormData {
@@ -12,9 +13,11 @@ interface FormData {
   surname: string;
   email: string;
   message: string;
+  /** Honeypot — hidden from people, bots fill it in */
+  website: string;
 }
 
-const INITIAL_FORM: FormData = { name: '', surname: '', email: '', message: '' };
+const INITIAL_FORM: FormData = { name: '', surname: '', email: '', message: '', website: '' };
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM);
@@ -30,7 +33,7 @@ const Contact: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_EXPRESS_URL}/api/mailer/send-email`,
+        `${API_URL}/kontakt`,
         formData,
         { headers: { 'Content-Type': 'application/json' } },
       );
@@ -43,7 +46,11 @@ const Contact: React.FC = () => {
       }
     } catch (error) {
       console.error('[Contact] Send failed:', error);
-      toast.error('Wystąpił problem z serwerem.', { position: 'top-right' });
+      const tooMany = axios.isAxiosError(error) && error.response?.status === 429;
+      toast.error(
+        tooMany ? 'Wysłano zbyt wiele wiadomości. Spróbuj ponownie za kilka minut.' : 'Wystąpił problem z serwerem.',
+        { position: 'top-right' },
+      );
     } finally {
       setLoading(false);
     }
@@ -93,6 +100,18 @@ const Contact: React.FC = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Honeypot */}
+            <input
+              type="text"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
+
             {/* Name */}
             <div className="relative">
               <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
