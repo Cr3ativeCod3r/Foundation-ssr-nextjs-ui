@@ -19,14 +19,14 @@ export const POPULATE_PARAMS = {
   /** Standard post fields: category + image + tags */
   POST_STANDARD: [
     'populate[category][populate]=cover_image',
-    'populate=image',
+    'populate[image]=true',
     'populate[tags][populate]=*',
   ],
 
   /** Full post fields: category + image + tags + gallery + author */
   POST_FULL: [
     'populate[category][populate]=cover_image',
-    'populate=image',
+    'populate[image]=true',
     'populate[tags][populate]=*',
     'populate[gallery][populate]=*',
     'populate[author][populate]=*',
@@ -42,6 +42,8 @@ export const POPULATE_PARAMS = {
 
 interface StrapiQueryParams {
   populate?: readonly string[];
+  /** Limit returned attributes (fields[0]=…) */
+  fields?: readonly string[];
   filters?: Record<string, string | number>;
   sort?: string | string[];
   pagination?: {
@@ -67,6 +69,12 @@ export function buildStrapiUrl(
 
   if (params.populate) {
     queryParts.push(...params.populate);
+  }
+
+  if (params.fields) {
+    params.fields.forEach((field, index) => {
+      queryParts.push(`fields[${index}]=${field}`);
+    });
   }
 
   if (params.filters) {

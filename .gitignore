@@ -16,3 +16,6 @@ yarn-error.log*
 # Editor folders
 .vscode/
 .idea/
+
+# TypeScript incremental build info
+*.tsbuildinfo
