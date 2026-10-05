@@ -4,7 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { fetchCategories } from '@/api/categories';
+import { Activity, Brain, BookOpen, LayoutGrid, Stethoscope } from 'lucide-react';
 import Skeleton from '@/components/ui/Skeleton';
+import PageHero from '@/components/ui/PageHero';
 import type { Category } from '@/types/news';
 
 const EXCLUDED_CATEGORIES = ['projekty', 'aktualnosci'];
@@ -32,16 +34,13 @@ export default function CategoriesPage() {
   return (
     <div className="min-h-screen animate-fade-in">
       {/* Hero */}
-      <div className="bg-gradient-to-b from-teal-50 to-white border-b border-teal-100">
-        <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
-            Kategorie chorób
-          </h1>
-          <p className="text-sm text-slate-500">
-            Wybierz kategorię, aby zobaczyć powiązane artykuły
-          </p>
-        </div>
-      </div>
+      <PageHero
+        icon={LayoutGrid}
+        eyebrow="Baza wiedzy"
+        title="Kategorie chorób"
+        description="Wybierz kategorię, aby zobaczyć rzetelne artykuły o objawach, diagnostyce i leczeniu."
+        decorations={[Brain, Stethoscope, Activity, BookOpen]}
+      />
 
       {/* Grid */}
       <div className="container mx-auto px-4 py-10">

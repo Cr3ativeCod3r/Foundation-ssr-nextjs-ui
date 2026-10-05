@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Newspaper, FolderKanban, FileText, Handshake, Mail, Info } from 'lucide-react';
+import { BarChart3, ChevronDown, Newspaper, FolderKanban, FileText, Handshake, Mail, Info } from 'lucide-react';
 import Link from 'next/link';
 
 interface FundacjaLink {
@@ -11,6 +11,7 @@ interface FundacjaLink {
 }
 
 const FUNDACJA_LINKS: FundacjaLink[] = [
+  { name: 'Raporty', path: '/raporty', icon: <BarChart3 size={16} /> },
   { name: 'Aktualności', path: '/aktualnosci', icon: <Newspaper size={16} /> },
   { name: 'Projekty', path: '/projekty', icon: <FolderKanban size={16} /> },
   { name: 'Statut', path: '/statut', icon: <FileText size={16} /> },

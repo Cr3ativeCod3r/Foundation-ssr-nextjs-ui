@@ -1,8 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
-import { Newspaper, FolderKanban, FileText, Handshake, Mail, Info } from 'lucide-react';
+import {
+  BarChart3,
+  Newspaper,
+  FolderKanban,
+  FileText,
+  Handshake,
+  HeartHandshake,
+  Mail,
+  Info,
+  Brain,
+  Users,
+  HeartPulse,
+} from 'lucide-react';
+import PageHero from '@/components/ui/PageHero';
 
 const LINKS = [
+  { name: 'Raporty', path: '/raporty', icon: BarChart3, color: 'text-teal-600', bg: 'bg-teal-50' },
   { name: 'Aktualności', path: '/aktualnosci', icon: Newspaper, color: 'text-blue-500', bg: 'bg-blue-50' },
   { name: 'Projekty', path: '/projekty', icon: FolderKanban, color: 'text-emerald-500', bg: 'bg-emerald-50' },
   { name: 'Statut', path: '/statut', icon: FileText, color: 'text-amber-500', bg: 'bg-amber-50' },
@@ -15,16 +29,13 @@ export default function FundacjaPage() {
   return (
     <div className="min-h-screen animate-fade-in">
       {/* Hero */}
-      <div className="bg-gradient-to-b from-teal-50 to-white border-b border-teal-100">
-        <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
-            Fundacja
-          </h1>
-          <p className="text-sm text-slate-500">
-            Dowiedz się więcej o Fundacji Chorób Mózgu
-          </p>
-        </div>
-      </div>
+      <PageHero
+        icon={HeartHandshake}
+        eyebrow="Fundacja Chorób Mózgu"
+        title="Fundacja"
+        description="Poznaj naszą misję, projekty i ludzi, którzy wspierają pacjentów z chorobami mózgu oraz ich bliskich."
+        decorations={[Users, HeartPulse, Brain, Handshake]}
+      />
 
       {/* Cards */}
       <div className="max-w-3xl mx-auto px-4 py-10">
