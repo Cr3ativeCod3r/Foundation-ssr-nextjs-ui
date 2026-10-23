@@ -8,6 +8,7 @@ import React from "react";
 import { Metadata } from "next";
 import WhyHowWhat from "@/Components/WhyHowWhat";
 import { fetchLatestVideos } from "@/api/youtube";
+// Only reports set to "produkcja" in Strapi are shown here
 import { fetchLatestReports } from "@/api/reports";
 import { LatestReportsSection } from "@/Components/Home/LatestReports/LatestReportsSection";
 
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "Choroby Mózgu",
     images: [
       {
-        url: "/img/avatar.jpg",
+        url: "/img/og-default.jpg",
         width: 1200,
         height: 630,
         alt: "Choroby Mózgu - Portal medyczny o neurologii",
@@ -45,8 +46,9 @@ export const metadata: Metadata = {
   },
 };
 
-// Re-fetch the YouTube feed at most once an hour
-export const revalidate = 3600;
+// Rendered per request so the latest report always comes straight from Strapi
+// (the YouTube feed keeps its own hourly fetch cache)
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const [videos, reports] = await Promise.all([fetchLatestVideos(5), fetchLatestReports(1)]);

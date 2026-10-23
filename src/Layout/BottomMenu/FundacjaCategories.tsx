@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { FaNewspaper, FaProjectDiagram, FaFileAlt, FaHandshake, FaEnvelope, FaInfoCircle } from "react-icons/fa";
+import { FaNewspaper, FaProjectDiagram, FaFileAlt, FaHandshake, FaHandHoldingHeart, FaEnvelope, FaInfoCircle } from "react-icons/fa";
 
 interface CategoryLink {
   name: string;
@@ -16,6 +16,7 @@ export default function CategoriesPage() {
     { name: "Projekty", path: "/projekty", icon: <FaProjectDiagram className="text-green-500" /> },
     { name: "Statut", path: "/statut", icon: <FaFileAlt className="text-yellow-600" /> },
     { name: "Współpraca", path: "/wspolpraca", icon: <FaHandshake className="text-purple-500" /> },
+    { name: "Wesprzyj nas", path: "/wesprzyj", icon: <FaHandHoldingHeart className="text-rose-500" /> },
     { name: "Kontakt", path: "/kontakt", icon: <FaEnvelope className="text-red-500" /> },
     { name: "O nas", path: "/o-nas", icon: <FaInfoCircle className="text-indigo-500" /> },
   ];

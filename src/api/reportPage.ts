@@ -1,5 +1,5 @@
 /**
- * Report page API — single report with the "sekcje" Dynamic Zone, PDF, SEO and glossary
+ * Report page API — single report with the "sekcje" Dynamic Zone, PDF, SEO, glossary and sponsor
  */
 
 import { cache } from 'react';
@@ -13,6 +13,7 @@ import { buildStrapiUrl, apiFetch } from './api-config';
 const REPORT_PAGE_POPULATE = [
   'populate[plikPdf]=true',
   'populate[seo][populate]=*',
+  'populate[sponsor][populate][logo]=true',
   'populate[slowniczek][sort][0]=kolejnosc:asc',
   'populate[slowniczek][sort][1]=termin:asc',
   'populate[sekcje][on][report.hero][populate][meta]=true',

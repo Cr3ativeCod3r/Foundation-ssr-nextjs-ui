@@ -5,6 +5,7 @@ import TransitionProvider from '@/Layout/TransitionProvider';
 import Navbar from '@/Layout/Navbar';
 import Footer from '@/Layout/Footer';
 import BottomMenu from '@/Layout/BottomMenu/BottomMenu';
+import { jsonLdHtml, organizationJsonLd } from '@/utils/seo';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -27,8 +28,12 @@ export const metadata: Metadata = {
     'leczenie',
     'artykuły medyczne',
   ],
-  authors: [{ name: 'Zespół ChorobyMózgu.pl' }],
+  authors: [{ name: 'Fundacja Chorób Mózgu' }],
+  publisher: 'Fundacja Chorób Mózgu',
   metadataBase: new URL('https://chorobymozgu.pl'),
+  verification: {
+    other: { 'msvalidate.01': '2E39DC1E2F826DF0F61CD1E5AA0CF39C' },
+  },
   openGraph: {
     title: 'Choroby Mózgu - Wiedza o neurologii i zdrowiu psychicznym',
     description:
@@ -39,7 +44,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/img/avatar.jpg',
+        url: '/img/og-default.jpg',
         width: 1200,
         height: 630,
         alt: 'Choroby Mózgu - Blog medyczny o neurologii',
@@ -56,6 +61,7 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <body className={`${inter.variable} antialiased bg-[var(--color-surface)]`}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(organizationJsonLd())} />
         <Navbar />
         <main>
           <TransitionProvider>{children}</TransitionProvider>

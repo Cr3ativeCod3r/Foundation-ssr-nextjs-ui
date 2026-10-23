@@ -47,6 +47,7 @@ export interface NewsItem {
   slug: string;
   imageUrl: string;
   createdAt: string;
+  updatedAt?: string;
   gallery: GalleryImage[];
   tags: string[];
   author: Author;
@@ -80,6 +81,7 @@ export interface ApiResponseItem {
   };
   slug: string;
   createdAt: string;
+  updatedAt?: string;
   content: BlocksContent;
   yt_link: string;
   gallery: string[];

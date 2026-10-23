@@ -5,8 +5,10 @@
 .content_render {
   font-family: "Inter", "Source Sans Pro", system-ui, sans-serif;
   font-size: 1rem;
+  /* Inter at 400 reads too thin for long text */
+  font-weight: 500;
   line-height: 1.8;
-  color: var(--color-text-primary);
+  color: #1e293b;
   margin: 0 auto;
 }
 

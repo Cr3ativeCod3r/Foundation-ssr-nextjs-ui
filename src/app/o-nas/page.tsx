@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import Image from 'next/image';
 import ContentRenderer from '@/utils/ContentRender';
 import { useEffect, useState } from 'react';
 import { type BlocksContent } from '@strapi/blocks-react-renderer';
@@ -29,13 +30,23 @@ export default function AboutPage() {
     <div className="min-h-screen animate-fade-in">
       {/* Hero */}
       <div className="bg-gradient-to-b from-teal-50 to-white border-b border-teal-100">
-        <div className="container mx-auto px-4 py-12 text-center">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">
-            O Fundacji
-          </h1>
-          <p className="text-sm text-slate-500">
-            Poznaj naszą misję, cele i zespół
-          </p>
+        <div className="container mx-auto px-4 pt-10 md:pt-6 flex flex-col md:flex-row items-center md:items-end justify-center gap-6 md:gap-12">
+          <div className="text-center md:text-left md:self-center">
+            <h1 className="text-3xl font-bold text-slate-800 mb-2">
+              O Fundacji
+            </h1>
+            <p className="text-sm text-slate-500">
+              Poznaj naszą misję, cele i zespół
+            </p>
+          </div>
+          <Image
+            src="/img/about-hero.webp"
+            alt=""
+            width={960}
+            height={717}
+            priority
+            className="w-64 md:w-80 h-auto mix-blend-multiply"
+          />
         </div>
       </div>
 

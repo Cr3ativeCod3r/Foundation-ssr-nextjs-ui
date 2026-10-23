@@ -108,3 +108,47 @@ export async function fetchRandomNews(
     return [];
   }
 }
+/* ═══════════════════════════════════════════════════
+   Post Index (sitemap, llms.txt)
+   ═══════════════════════════════════════════════════ */
+
+export interface PostIndexEntry {
+  slug: string;
+  header: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+  category: { slug: string; name: string } | null;
+}
+
+/**
+ * Fetches every published post with only the fields needed to list it.
+ * Cached for an hour. Never throws.
+ */
+export async function fetchPostIndex(): Promise<PostIndexEntry[]> {
+  const posts: PostIndexEntry[] = [];
+  let page = 1;
+  let pageCount = 1;
+
+  try {
+    do {
+      const url = buildStrapiUrl('/posts', {
+        fields: ['slug', 'header', 'description', 'createdAt', 'updatedAt'],
+        populate: ['populate[category][fields][0]=slug', 'populate[category][fields][1]=name'],
+        sort: 'createdAt:desc',
+        pagination: { page, pageSize: 100 },
+      });
+      const data = await apiFetch<{
+        data: PostIndexEntry[];
+        meta: { pagination: { pageCount: number } };
+      }>(url, { next: { revalidate: 3600 } });
+      posts.push(...data.data);
+      pageCount = data.meta.pagination.pageCount;
+      page++;
+    } while (page <= pageCount);
+  } catch (error) {
+    console.error('[fetchPostIndex] Failed to fetch posts:', error);
+  }
+
+  return posts.filter((p) => p.slug && p.category?.slug);
+}

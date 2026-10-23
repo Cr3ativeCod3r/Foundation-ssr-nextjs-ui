@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { BarChart3, ChevronDown, Newspaper, FolderKanban, FileText, Handshake, Mail, Info } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { BarChart3, ChevronDown, Newspaper, FolderKanban, FileText, Handshake, HandHeart, Mail, Info } from 'lucide-react';
 import Link from 'next/link';
+import { hasReports } from '@/api/reports';
 
 interface FundacjaLink {
   name: string;
@@ -16,12 +17,20 @@ const FUNDACJA_LINKS: FundacjaLink[] = [
   { name: 'Projekty', path: '/projekty', icon: <FolderKanban size={16} /> },
   { name: 'Statut', path: '/statut', icon: <FileText size={16} /> },
   { name: 'Współpraca', path: '/wspolpraca', icon: <Handshake size={16} /> },
+  { name: 'Wesprzyj nas', path: '/wesprzyj', icon: <HandHeart size={16} /> },
   { name: 'Kontakt', path: '/kontakt', icon: <Mail size={16} /> },
   { name: 'O nas', path: '/o-nas', icon: <Info size={16} /> },
 ];
 
 const FundacjaDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showReports, setShowReports] = useState(false);
+
+  useEffect(() => {
+    hasReports().then(setShowReports);
+  }, []);
+
+  const links = showReports ? FUNDACJA_LINKS : FUNDACJA_LINKS.filter((link) => link.path !== '/raporty');
 
   return (
     <div
@@ -49,7 +58,7 @@ const FundacjaDropdown: React.FC = () => {
         `}
       >
         <div className="bg-white rounded-xl shadow-xl border border-gray-100/80 overflow-hidden w-[220px] py-1">
-          {FUNDACJA_LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.path}
               href={link.path}

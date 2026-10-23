@@ -7,6 +7,12 @@ import { buildStrapiUrl, apiFetch } from './api-config';
 
 export const REPORTS_PAGE_SIZE = 10;
 
+/**
+ * Only "produkcja" reports are listed (homepage, /raporty, navbar).
+ * "test" reports stay reachable by their URL only.
+ */
+const PRODUCTION_FILTER = { 'filters[tryb][$eq]': 'produkcja' } as const;
+
 /* ═══════════════════════════════════════════════════
    Report List
    ═══════════════════════════════════════════════════ */
@@ -23,6 +29,7 @@ export async function fetchReports(
   pageSize: number = REPORTS_PAGE_SIZE,
 ): Promise<ReportsResponse> {
   const url = buildStrapiUrl('/raporty', {
+    filters: PRODUCTION_FILTER,
     sort: ['data:desc', 'createdAt:desc'],
     pagination: { page, pageSize },
   });
@@ -55,9 +62,6 @@ export async function fetchReportBySlug(slug: string): Promise<Report | null> {
    Latest Reports (homepage)
    ═══════════════════════════════════════════════════ */
 
-/** Homepage list is cached — new reports show up within 10 minutes */
-const LATEST_REPORTS_REVALIDATE = 600;
-
 /**
  * Fetches the newest reports for the homepage. Never throws.
  *
@@ -66,17 +70,36 @@ const LATEST_REPORTS_REVALIDATE = 600;
 export async function fetchLatestReports(limit: number = 3): Promise<Pick<Report, 'id' | 'nazwa' | 'slug' | 'data'>[]> {
   const url = buildStrapiUrl('/raporty', {
     fields: ['nazwa', 'slug', 'data'],
+    filters: PRODUCTION_FILTER,
     sort: ['data:desc', 'createdAt:desc'],
     pagination: { page: 1, pageSize: limit },
   });
 
   try {
-    const response = await apiFetch<ReportsResponse>(url, {
-      next: { revalidate: LATEST_REPORTS_REVALIDATE },
-    });
+    // Always read fresh data so added/removed reports show up immediately
+    const response = await apiFetch<ReportsResponse>(url, { cache: 'no-store' });
     return response.data;
   } catch (error) {
     console.error('[fetchLatestReports] Failed to fetch reports:', error);
     return [];
+  }
+}
+
+/**
+ * Checks whether at least one production report is published. Never throws.
+ */
+export async function hasReports(): Promise<boolean> {
+  const url = buildStrapiUrl('/raporty', {
+    fields: ['slug'],
+    filters: PRODUCTION_FILTER,
+    pagination: { page: 1, pageSize: 1 },
+  });
+
+  try {
+    const response = await apiFetch<ReportsResponse>(url, { cache: 'no-store' });
+    return response.meta.pagination.total > 0;
+  } catch (error) {
+    console.error('[hasReports] Failed to fetch reports:', error);
+    return false;
   }
 }

@@ -14,6 +14,9 @@ import {
   HeartPulse,
 } from 'lucide-react';
 import PageHero from '@/components/ui/PageHero';
+import { hasReports } from '@/api/reports';
+
+export const dynamic = 'force-dynamic';
 
 const LINKS = [
   { name: 'Raporty', path: '/raporty', icon: BarChart3, color: 'text-teal-600', bg: 'bg-teal-50' },
@@ -25,7 +28,9 @@ const LINKS = [
   { name: 'O nas', path: '/o-nas', icon: Info, color: 'text-indigo-500', bg: 'bg-indigo-50' },
 ] as const;
 
-export default function FundacjaPage() {
+export default async function FundacjaPage() {
+  const links = (await hasReports()) ? LINKS : LINKS.filter((link) => link.path !== '/raporty');
+
   return (
     <div className="min-h-screen animate-fade-in">
       {/* Hero */}
@@ -40,7 +45,7 @@ export default function FundacjaPage() {
       {/* Cards */}
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 stagger-children">
-          {LINKS.map((link) => {
+          {links.map((link) => {
             const Icon = link.icon;
             return (
               <Link

@@ -1,12 +1,18 @@
-import { Clock, Sparkles } from 'lucide-react';
+import Image from 'next/image';
+import { Sparkles } from 'lucide-react';
 
 const ComingSoon: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-[70vh]">
       <div className="text-center px-4 max-w-md animate-fade-in">
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center mx-auto mb-6 shadow-sm">
-          <Clock className="text-teal-500" size={36} />
-        </div>
+        <Image
+          src="/img/coming-soon.webp"
+          alt=""
+          width={640}
+          height={640}
+          priority
+          className="w-56 h-56 md:w-64 md:h-64 mx-auto mb-4"
+        />
         <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
           Zakładka dostępna wkrótce
         </h1>

@@ -167,6 +167,16 @@ export type ReportSection =
   | PartnerCtaBlock;
 
 /** Report with all variant A fields populated */
+/** Sponsor shown at the bottom of the report */
+export interface ReportSponsor {
+  id: number;
+  etykieta: string | null;
+  nazwa: string;
+  logo: StrapiMedia | null;
+  url: string | null;
+  opis: string | null;
+}
+
 export interface ReportPageData extends Report {
   updatedAt: string;
   sekcje: (ReportSection | { __component: string; id: number })[] | null;
@@ -174,6 +184,7 @@ export interface ReportPageData extends Report {
   liczbaStron: number | null;
   seo: Seo | null;
   slowniczek: GlossaryTerm[] | null;
+  sponsor: ReportSponsor | null;
 }
 
 /** Report-level data every section can use (PDF, slug, anchors) */

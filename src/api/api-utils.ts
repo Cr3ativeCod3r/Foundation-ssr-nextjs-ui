@@ -100,6 +100,7 @@ export function parseNewsItem(item: ApiResponseItem): NewsItem {
     imageUrl: parseImageUrl(item.image, item.category?.cover_image),
     slug: item.slug,
     createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
     tags: parseTags(item.tags),
     content: item.content,
     yt_link: item.yt_link,

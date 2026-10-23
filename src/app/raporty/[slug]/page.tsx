@@ -51,6 +51,8 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
         title: `${title} | Raporty`,
         description,
         alternates: { canonical: url },
+        // Test reports are shared by link only — keep them out of search results
+        ...(report.tryb !== 'produkcja' && { robots: { index: false, follow: false } }),
         openGraph: {
           title,
           description,

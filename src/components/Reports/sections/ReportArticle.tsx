@@ -5,6 +5,7 @@ import type { ReportContext, ReportPageData } from '@/types/reportSections';
 import { formatFileSize, mediaUrl } from '@/utils/reportFormat';
 import { GlossaryButton, GlossaryDialog } from './client';
 import ReportSections from './ReportSections';
+import ReportSponsor from './ReportSponsor';
 import { DASHBOARD_ANCHOR } from './TableauDashboard';
 import { CONTAINER } from './styles';
 import './report.css';
@@ -63,6 +64,8 @@ export default function ReportArticle({ report, jsonLd }: { report: ReportPageDa
       </div>
 
       <ReportSections sekcje={report.sekcje ?? []} report={context} />
+
+      {report.sponsor && <ReportSponsor sponsor={report.sponsor} />}
 
       {context.hasGlossary && <GlossaryDialog terms={report.slowniczek!} />}
     </article>

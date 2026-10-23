@@ -14,6 +14,7 @@ const FOOTER_LINKS = {
     { name: 'Statut', href: '/statut' },
     { name: 'Projekty', href: '/projekty' },
     { name: 'O nas', href: '/o-nas' },
+    { name: 'Wesprzyj nas', href: '/wesprzyj' },
   ],
 } as const;
 
