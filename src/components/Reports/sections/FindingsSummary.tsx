@@ -72,7 +72,9 @@ function FindingNumber({ value }: { value: string }) {
 }
 
 function valueLabel(value: number, unit?: string) {
-  return unit ? `${formatNumber(value)} ${unit}` : formatNumber(value);
+  if (!unit) return formatNumber(value);
+  // Polish style: "69%" without a space, other units with one ("13 mln zł")
+  return unit === '%' ? `${formatNumber(value)}%` : `${formatNumber(value)} ${unit}`;
 }
 
 /** Horizontal bars, one per item; the last bar is highlighted */
@@ -82,18 +84,20 @@ function CompareChart({ data }: { data: ChartData }) {
   const label = points.map((p) => `${valueLabel(Number(p.wartosc), data.jednostka)} (${p.etykieta})`).join(', ');
 
   return (
-    <div role="img" aria-label={data.opis ? `${data.opis}: ${label}` : label} className="mt-5 grid gap-2">
+    <div
+      role="img"
+      aria-label={data.opis ? `${data.opis}: ${label}` : label}
+      className="mt-5 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 text-xs sm:text-sm"
+    >
+      {/* Rows share the parent grid so the label column fits the longest label */}
       {points.map((point, index) => (
-        <div
-          key={`${point.etykieta}-${index}`}
-          className="grid grid-cols-[3rem_1fr_auto] items-center gap-3 text-xs sm:text-sm"
-        >
+        <div key={`${point.etykieta}-${index}`} className="contents">
           <span className="font-semibold text-slate-500">{point.etykieta}</span>
           <i
             style={{ width: barWidth(Number(point.wartosc), max) }}
             className={`report-bar block h-3 rounded-full ${index === points.length - 1 ? 'bg-rose-600' : 'bg-teal-700'}`}
           />
-          <b className="min-w-[4.5rem] text-right tabular-nums">{valueLabel(Number(point.wartosc), data.jednostka)}</b>
+          <b className="text-right tabular-nums">{valueLabel(Number(point.wartosc), data.jednostka)}</b>
         </div>
       ))}
     </div>
