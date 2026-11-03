@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, ChevronDown, Newspaper, FolderKanban, FileText, Handshake, HandHeart, Mail, Info } from 'lucide-react';
+import { BarChart3, ChevronDown, Newspaper, FolderKanban, FileText, Landmark, HandHeart, Mail, Info } from 'lucide-react';
 import Link from 'next/link';
 import { hasReports } from '@/api/reports';
 
@@ -16,7 +16,7 @@ const FUNDACJA_LINKS: FundacjaLink[] = [
   { name: 'Aktualności', path: '/aktualnosci', icon: <Newspaper size={16} /> },
   { name: 'Projekty', path: '/projekty', icon: <FolderKanban size={16} /> },
   { name: 'Statut', path: '/statut', icon: <FileText size={16} /> },
-  { name: 'Współpraca', path: '/wspolpraca', icon: <Handshake size={16} /> },
+  { name: 'Sprawozdania finansowe', path: '/sprawozdania-finansowe', icon: <Landmark size={16} /> },
   { name: 'Wesprzyj nas', path: '/wesprzyj', icon: <HandHeart size={16} /> },
   { name: 'Kontakt', path: '/kontakt', icon: <Mail size={16} /> },
   { name: 'O nas', path: '/o-nas', icon: <Info size={16} /> },

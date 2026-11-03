@@ -6,6 +6,7 @@ import {
   FolderKanban,
   FileText,
   Handshake,
+  Landmark,
   HeartHandshake,
   Mail,
   Info,
@@ -23,7 +24,7 @@ const LINKS = [
   { name: 'Aktualności', path: '/aktualnosci', icon: Newspaper, color: 'text-blue-500', bg: 'bg-blue-50' },
   { name: 'Projekty', path: '/projekty', icon: FolderKanban, color: 'text-emerald-500', bg: 'bg-emerald-50' },
   { name: 'Statut', path: '/statut', icon: FileText, color: 'text-amber-500', bg: 'bg-amber-50' },
-  { name: 'Współpraca', path: '/wspolpraca', icon: Handshake, color: 'text-purple-500', bg: 'bg-purple-50' },
+  { name: 'Sprawozdania finansowe', path: '/sprawozdania-finansowe', icon: Landmark, color: 'text-purple-500', bg: 'bg-purple-50' },
   { name: 'Kontakt', path: '/kontakt', icon: Mail, color: 'text-rose-500', bg: 'bg-rose-50' },
   { name: 'O nas', path: '/o-nas', icon: Info, color: 'text-indigo-500', bg: 'bg-indigo-50' },
 ] as const;

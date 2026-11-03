@@ -51,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "mapa",
     "kategorie",
     "brain",
-    "wspolpraca",
+    "sprawozdania-finansowe",
     "wesprzyj",
     "statut",
     "kontakt",
