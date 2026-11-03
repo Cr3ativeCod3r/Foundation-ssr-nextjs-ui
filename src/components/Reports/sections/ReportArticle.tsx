@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Source_Serif_4 } from 'next/font/google';
 import { BookOpen } from 'lucide-react';
-import type { ReportContext, ReportPageData } from '@/types/reportSections';
-import { formatFileSize, mediaUrl } from '@/utils/reportFormat';
+import type { ReportContext, ReportPageData, ReportSection, TableauEmbedBlock } from '@/types/reportSections';
+import { formatFileSize, mediaUrl, tableauViewPath } from '@/utils/reportFormat';
 import { GlossaryButton, GlossaryDialog } from './client';
 import ReportSections from './ReportSections';
 import ReportSponsor from './ReportSponsor';
@@ -21,7 +21,9 @@ const displayFont = Source_Serif_4({
 export function buildReportContext(report: ReportPageData): ReportContext {
   const pdfUrl = mediaUrl(report.plikPdf?.url);
   const sekcje = report.sekcje ?? [];
-  const hasDashboard = sekcje.some((b) => b.__component === 'report.tableau-embed');
+  const hasDashboard = sekcje.some(
+    (b) => b.__component === 'report.tableau-embed' && Boolean((b as TableauEmbedBlock).tableauWidok),
+  );
 
   return {
     slug: report.slug,
@@ -33,8 +35,23 @@ export function buildReportContext(report: ReportPageData): ReportContext {
   };
 }
 
+/**
+ * Normalizes tableauWidok in dashboard blocks: accepts a path, URL or embed code,
+ * and falls back to the report's "kod" field (embed code pasted the old way).
+ */
+function withTableauViews(report: ReportPageData): ReportPageData {
+  const fallback = tableauViewPath(report.kod);
+  const sekcje = (report.sekcje ?? []).map((block) => {
+    if (block.__component !== 'report.tableau-embed') return block;
+    const dashboard = block as TableauEmbedBlock;
+    return { ...dashboard, tableauWidok: tableauViewPath(dashboard.tableauWidok) ?? fallback ?? '' } as ReportSection;
+  });
+  return { ...report, sekcje };
+}
+
 /** Report page built from Strapi sections (variant A) */
-export default function ReportArticle({ report, jsonLd }: { report: ReportPageData; jsonLd: object }) {
+export default function ReportArticle({ report: raw, jsonLd }: { report: ReportPageData; jsonLd: object }) {
+  const report = withTableauViews(raw);
   const context = buildReportContext(report);
 
   return (

@@ -37,6 +37,24 @@ export function barWidth(value: number, max: number): string {
   return `${Math.max(1, (value / max) * 100).toFixed(1)}%`;
 }
 
+/**
+ * Extracts the Tableau Public "Workbook/View" path from what editors paste:
+ * the path itself, a public.tableau.com/views/… URL, or the full embed code.
+ * Returns null when nothing usable is found.
+ */
+export function tableauViewPath(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const text = value.trim().replace(/&#47;/g, '/');
+
+  // Embed code: <param name='name' value='Workbook/View' />
+  const param = text.match(/name=['"]name['"]\s+value=['"]([^'"]+)['"]/i);
+  // URL: https://public.tableau.com/views/Workbook/View?…
+  const url = text.match(/\/views\/([^/?#\s'"]+)\/([^/?#\s'"]+)/i);
+
+  const candidate = param ? param[1] : url ? `${url[1]}/${url[2]}` : text;
+  return /^[^/\s<>'"]+\/[^/\s<>'"]+$/.test(candidate) ? candidate : null;
+}
+
 /** Public Tableau view URLs built from "Workbook/Sheet" */
 export function tableauUrls(view: string) {
   const path = view
