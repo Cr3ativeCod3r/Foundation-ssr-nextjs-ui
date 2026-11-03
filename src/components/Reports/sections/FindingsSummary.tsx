@@ -33,9 +33,7 @@ function FindingItem({ finding }: { finding: Finding }) {
 
   return (
     <article className="grid gap-3 border-t border-slate-200 py-8 first:border-t-0 first:pt-0 sm:grid-cols-[9.5rem_1fr] sm:gap-6">
-      <p className="report-display whitespace-nowrap text-4xl leading-none tabular-nums text-teal-700 lg:text-[2.6rem]">
-        {finding.liczba}
-      </p>
+      <FindingNumber value={finding.liczba} />
       <div>
         <h3 className="text-lg font-semibold leading-snug md:text-xl">{finding.tytul}</h3>
         {finding.opis && (
@@ -49,6 +47,27 @@ function FindingItem({ finding }: { finding: Finding }) {
         {finding.typWykresu === 'podzial' && points.length > 0 && <SplitChart data={finding.daneWykresu!} />}
       </div>
     </article>
+  );
+}
+
+/** Two values joined by a connector ("3,00 vs 3,17", "48% i 33%") */
+const PAIR_PATTERN = /^(.+?)\s+(vs\.?|i|oraz|lub|wobec)\s+(.+)$/i;
+
+/** Key number; a pair of values goes on two lines with a smaller connector so it fits the narrow column */
+function FindingNumber({ value }: { value: string }) {
+  const pair = value.match(PAIR_PATTERN);
+  const className = "report-display text-4xl leading-none tabular-nums text-teal-700 lg:text-[2.6rem]";
+
+  if (!pair) return <p className={className + " whitespace-nowrap"}>{value}</p>;
+
+  return (
+    <p className={className}>
+      <span className="block whitespace-nowrap">{pair[1]}</span>
+      <span className="mt-1 block whitespace-nowrap">
+        <small className="mr-1.5 text-[0.5em] font-semibold uppercase tracking-wide text-slate-500">{pair[2]}</small>
+        {pair[3]}
+      </span>
+    </p>
   );
 }
 
